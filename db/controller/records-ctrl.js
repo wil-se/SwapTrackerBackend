@@ -17,9 +17,16 @@ createUser = async (req,res) => {
     const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                         { $set: { lastLogin: body.lastLogin } },
                                         {upsert:true})
-
-	console.log("qui??", userFinded)
-    if(false){
+    if(userFinded.value){
+        console.log("o qui??", userFinded)
+        return res.status(201).json({
+            success:true,
+            id:req._id,
+            message: `${body.address} aggiornato`,
+        })
+    }
+    else{
+        console.log("qui??", userFinded)
 
         await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
             if(!err){
