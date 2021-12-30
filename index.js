@@ -14,8 +14,7 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.get('/', (req, res) => {
-	console.log('ci entro?')
-    res.send('Sto runnando...... ')
+	res.send('Sto runnando...... ')
 })
 
 app.use('/data',recordsRouter)
