@@ -14,30 +14,32 @@ createUser = async (req,res) => {
 	}
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
-    await collection.findOneAndUpdate({ address: body.address },
+    const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                         { $set: { lastLogin: body.lastLogin } },
-                                        {upsert:true},(err,res)=>{
-                                            console.log(err,res)
-                                        })
-	console.log("qui??")
-	await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
-        if(!err){
-            
-            return res.status(201).json({
-                success: true,
-                id: req._id,
-                message: `${body.address} , ${JSON.stringify(resp)} creato!`,
-            })
-        }
-        else{
-           console.log("ecco l errore",err);
-            return res.status(400).json({
-                err,
-                message: `${body.address} non creato!`,
-            })
+                                        {upsert:true})
 
-        }
-    })		
+	console.log("qui??", userFinded)
+    if(false){
+
+        await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
+            if(!err){
+                
+                return res.status(201).json({
+                    success: true,
+                    id: req._id,
+                    message: `${body.address} , ${JSON.stringify(resp)} creato!`,
+                })
+            }
+            else{
+               console.log("ecco l errore",err);
+                return res.status(400).json({
+                    err,
+                    message: `${body.address} non creato!`,
+                })
+    
+            }
+        })		
+    }
 	
 
 
