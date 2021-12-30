@@ -88,7 +88,7 @@ createOrUpdateUserTokenList = async (req,res) => {
         console.log("vediamo final ", userFinded.tokenList)
         await collection
         .findOneAndUpdate({ address: body.address },
-                          { $set: { tokenList: newTokenList } }
+                          { $set: { tokenList: newTokenList } },
                           (err,resp)=>{
                             if(!err){
                                 return res.status(201).json({
