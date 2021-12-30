@@ -6,7 +6,7 @@ createUser = async (req,res) => {
 	const listRecord = [];
 	listRecord.push(body);
 	
-	if(!body) {
+	if(!body.address) {
 		return res.status(400).json({
 				success:false,
 				error:'body mancante',
