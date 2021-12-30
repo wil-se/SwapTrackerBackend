@@ -61,8 +61,30 @@ createOrUpdateUserTokenList = async (req,res) => {
     console.log("arriva fin qui");
     const userFinded = await collection.findOne({ address: body.address })
     console.log("vediamo ",userFinded)
-    //const userFindedUpdated = await collection.findOneAndUpdate({ address: body.address },
-    //                                    { $set: { tokenList: body.tokenList } })
+    if(!userFinded.tokenList){
+
+        await collection
+            .findOneAndUpdate({ address: body.address },
+                              { $set: { tokenList: body.tokenList } },
+                              (err,resp)=>{
+                                if(!err){
+                                    return res.status(201).json({
+                                        success:true,
+                                        message: `${body.address} tokenList creata`
+                                    })
+                                }
+                                else {
+                                    return res.status(400).json({
+                                        success:false,
+                                        message: `${body.address} ${err}`
+                                    }) 
+                                }
+                              })
+    }
+    if(userFinded.tokenList[body.chainId]){
+        
+       console.log("lista corretta?? ", userFinded.tokenList[body.chainId]) 
+    }
 
     
     if(userFinded.value){
