@@ -82,8 +82,8 @@ createOrUpdateUserTokenList = async (req,res) => {
                               })
     }
     if(userFinded.tokenList[body.chainId]){
-        let newTokenList = [new Set(...userFinded.tokenList[body.chainId],...body.tokenList[body.chainId])]
-        console.log("vediamo la magia ", newTokenList)
+        let newTokenList = [...userFinded.tokenList[body.chainId],...body.tokenList[body.chainId]]
+        console.log("vediamo la magia ",new Set(newTokenList))
 
       
     }
