@@ -14,10 +14,11 @@ createUser = async (req,res) => {
 	}
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
-    await collection.findOneAndUpdate({
-        query: { address: body.address },
-        update: { $set: { lastLogin: body.lastLogin } },
-        })
+    await collection.findOneAndUpdate({ address: body.address },
+                                        { $set: { lastLogin: body.lastLogin } },
+                                        {upsert:true},(err,res)=>{
+                                            console.log(err,res)
+                                        })
 	console.log("qui??")
 	await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
         if(!err){
