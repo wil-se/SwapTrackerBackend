@@ -105,6 +105,25 @@ createOrUpdateUserTokenList = async (req,res) => {
                           })
       
     }
+    if(!userFinded.tokenList[body.chainId]){
+        await collection
+        .findOneAndUpdate({ address: body.address },
+                          { $set: { tokenList: body.tokenList } },
+                          (err,resp)=>{
+                            if(!err){
+                                return res.status(201).json({
+                                    success:true,
+                                    message: `${body.address} tokenList aggiornata`
+                                })
+                            }
+                            else {
+                                return res.status(400).json({
+                                    success:false,
+                                    message: `${body.address} ${err}`
+                                }) 
+                            }
+                          })
+    }
 
     
     if(userFinded.value){
