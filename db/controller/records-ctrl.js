@@ -16,7 +16,7 @@ createUser = async (req,res) => {
     console.log("arriva fin qui");
     await collection.findOneAndUpdate({
         query: { address: body.address },
-        update: { $inc: { lastLogin: body.lastLogin } },
+        update: { $set: { lastLogin: body.lastLogin } },
         })
 	console.log("qui??")
 	await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
