@@ -15,8 +15,7 @@ createUser = async (req,res) => {
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
     const userFinded = await collection.findOneAndUpdate({ address: body.address },
-                                        { $set: { lastLogin: body.lastLogin } },
-                                        {upsert:true})
+                                        { $set: { lastLogin: body.lastLogin } })
     if(userFinded.value){
         console.log("o qui??", userFinded)
         return res.status(201).json({
