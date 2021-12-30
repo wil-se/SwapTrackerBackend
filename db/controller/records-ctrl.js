@@ -59,8 +59,12 @@ createOrUpdateUserTokenList = async (req,res) => {
 	}
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
-    const userFinded = await collection.findOneAndUpdate({ address: body.address },
-                                        { $set: { tokenList: body.tokenList } })
+    const userFinded = await collection.findOne({ address: body.address })
+    console.log("vediamo ",userFinded)
+    //const userFindedUpdated = await collection.findOneAndUpdate({ address: body.address },
+    //                                    { $set: { tokenList: body.tokenList } })
+
+    
     if(userFinded.value){
         return res.status(201).json({
             success:true,
