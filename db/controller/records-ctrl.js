@@ -83,12 +83,12 @@ createOrUpdateUserTokenList = async (req,res) => {
     }
     if(userFinded.tokenList[body.chainId]){
         let newTokenList = [...userFinded.tokenList[body.chainId],...body.tokenList[body.chainId]]
-        userFinded.tokenList[body.chainId] = Array.from(new Set(newTokenList))
+        newTokenList = Array.from(new Set(newTokenList))
 
         console.log("vediamo final ", userFinded.tokenList)
         await collection
         .findOneAndUpdate({ address: body.address },
-                          userFinded,
+                          { $set: { tokenList: newTokenList } }
                           (err,resp)=>{
                             if(!err){
                                 return res.status(201).json({
