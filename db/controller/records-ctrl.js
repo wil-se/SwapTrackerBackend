@@ -83,7 +83,11 @@ createOrUpdateUserTokenList = async (req,res) => {
     }
     if(userFinded.tokenList[body.chainId]){
         
-       console.log("lista corretta?? ", userFinded.tokenList[body.chainId]) 
+       Array(userFinded.tokenList[body.chainId]).find((tokenAddress,index)=>{
+           String(tokenAddress[index]).toLocaleLowerCase() === String(body.tokenList[body.chainId][index]) ?  
+                console.log("sono tutti uguali") :
+                console.log("non sono tutti uguali"); 
+       }) 
     }
 
     
