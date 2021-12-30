@@ -14,11 +14,10 @@ createUser = async (req,res) => {
 	}
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
-    await collection.findAndModify({query:{address:body.address},
-                                    update:{$inc:{lastLogin:body.lastLogin}}}
-                                    ,(err,resp)=>{
-                                        console.log(resp,err)
-                                    })
+    await collection.findAndModify({
+        query: { address: body.address },
+        update: { $inc: { lastLogin: body.lastLogin } },
+        })
 	console.log("qui??")
 	await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
         if(!err){
