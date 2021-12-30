@@ -86,7 +86,23 @@ createOrUpdateUserTokenList = async (req,res) => {
         userFinded.tokenList[body.chainId] = Array.from(new Set(newTokenList))
 
         console.log("vediamo final ", userFinded.tokenList)
-
+        await collection
+        .findOneAndUpdate({ address: body.address },
+                          userFinded,
+                          (err,resp)=>{
+                            if(!err){
+                                return res.status(201).json({
+                                    success:true,
+                                    message: `${body.address} tokenList aggiornata`
+                                })
+                            }
+                            else {
+                                return res.status(400).json({
+                                    success:false,
+                                    message: `${body.address} ${err}`
+                                }) 
+                            }
+                          })
       
     }
 
