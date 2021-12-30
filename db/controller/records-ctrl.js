@@ -14,7 +14,7 @@ createUser = async (req,res) => {
 	}
 	const collection = await getCollection('Users');
     console.log("arriva fin qui");
-    await collection.findAndModify({
+    await collection.findOneAndUpdate({
         query: { address: body.address },
         update: { $inc: { lastLogin: body.lastLogin } },
         })
