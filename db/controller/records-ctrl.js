@@ -1,10 +1,9 @@
 const {getCollection} = require('../dataModels/dataModel')
 
 createOrUpdateUser = async (req,res) => {
-	console.log('sono entrato in create User',req.body)
 	const body = req.body;
 	const listRecord = [];
-	listRecord.push(body);
+	
 	
 	if(!body.address) {
 		return res.status(400).json({
@@ -13,22 +12,26 @@ createOrUpdateUser = async (req,res) => {
 			})
 	}
 	const collection = await getCollection('Users');
-    console.log("arriva fin qui");
     const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                         { $set: { lastLogin: body.lastLogin } })
     if(userFinded.value){
         return res.status(201).json({
-            success:true,
+            created:false,
             id:req._id,
             message: `${body.address} aggiornato`,
         })
     }
     else{
+        body.tokenList = {
+            1:[process.env.WETH],
+            56:[process.env.WBNB]
+        }
+        listRecord.push(body);
         
         await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
             if(!err){              
                 return res.status(201).json({
-                    success: true,
+                    created:true,
                     id: req._id,
                     message: `${body.address} , ${JSON.stringify(resp)} creato!`,
                 })
@@ -45,9 +48,8 @@ createOrUpdateUser = async (req,res) => {
 	
 }
 
-createOrUpdateUserTokenList = async (req,res) => {
-    console.log('sono entrato in create User',req.body)
-	const body = req.body;
+updateUserTokenList = async (req,res) => {
+    const body = req.body;
 	const listRecord = [];
 	listRecord.push(body);
 	
@@ -58,9 +60,7 @@ createOrUpdateUserTokenList = async (req,res) => {
 			})
 	}
 	const collection = await getCollection('Users');
-    console.log("arriva fin qui");
     const userFinded = await collection.findOne({ address: body.address })
-    console.log("vediamo ",userFinded)
     if(!userFinded.tokenList){
 
         await collection
@@ -82,10 +82,10 @@ createOrUpdateUserTokenList = async (req,res) => {
                               })
     }
     if(userFinded.tokenList[body.chainId]){
+        let oldTokenListLength = userFinded.tokenList[body.chainId].length
         let newTokenListByChainId = [...userFinded.tokenList[body.chainId],...body.tokenList[body.chainId]]
         userFinded.tokenList[body.chainId] = Array.from(new Set(newTokenListByChainId))
 
-        console.log("vediamo final ", userFinded.tokenList)
         await collection
         .findOneAndUpdate({ address: body.address },
                           { $set: { tokenList: userFinded.tokenList } },
@@ -93,12 +93,14 @@ createOrUpdateUserTokenList = async (req,res) => {
                             if(!err){
                                 return res.status(201).json({
                                     success:true,
+                                    new_items: userFinded.tokenList[body.chainId].length - oldTokenListLength,
                                     message: `${body.address} tokenList aggiornata`
                                 })
                             }
                             else {
                                 return res.status(400).json({
                                     success:false,
+                                    new_items: 0,
                                     message: `${body.address} ${err}`
                                 }) 
                             }
@@ -131,6 +133,6 @@ createOrUpdateUserTokenList = async (req,res) => {
 
 module.exports = {
 	createOrUpdateUser,
-    createOrUpdateUserTokenList
+    updateUserTokenList
 
 }
