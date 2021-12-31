@@ -125,14 +125,6 @@ createOrUpdateUserTokenList = async (req,res) => {
                           })
     }
 
-    
-    if(userFinded.value){
-        return res.status(201).json({
-            success:true,
-            id:req._id,
-            message: `${body.address} aggiornato`,
-        })
-    }
 }
 
 
