@@ -19,6 +19,7 @@ createOrUpdateUser = async (req,res) => {
             created:false,
             id:req._id,
             message: `${body.address} aggiornato`,
+            data: userFinded.value
         })
     }
     else{
@@ -34,6 +35,7 @@ createOrUpdateUser = async (req,res) => {
                     created:true,
                     id: req._id,
                     message: `${body.address} , ${JSON.stringify(resp)} creato!`,
+                    data: body
                 })
             }
             else{
@@ -128,6 +130,8 @@ updateUserTokenList = async (req,res) => {
     }
 
 }
+
+getUser
 
 
 
