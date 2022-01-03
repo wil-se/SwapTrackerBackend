@@ -131,7 +131,7 @@ updateUserTokenList = async (req,res) => {
 
 }
 
-getUser
+
 
 
 
