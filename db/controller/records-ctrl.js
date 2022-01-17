@@ -133,7 +133,7 @@ updateUserTokenList = async (req,res) => {
 }
 
 
-insertTrades = async (req,res) => {
+insertOrUpdateTrades = async (req,res) => {
     console.log("entro??")
     const body = req.body;
 	const listRecord = [];
@@ -193,6 +193,35 @@ insertTrades = async (req,res) => {
             }
         })		
     }
+
+}
+
+getTrades = async (req,res) => {
+    const body = req.body;
+
+    if(!body) {
+		return res.status(400).json({
+				success:false,
+				error:'body mancante',
+			})
+	}
+
+    const collection = await getCollection('Trades');
+
+    const trades = await collection.find({user:body.account}).toArray();
+
+    console.log("vediamo ",trades)
+
+    if(trades){
+        return res.status(201).json({
+            created:true,
+            data: trades
+        })
+    } 
+
+
+
+
 
 }
 
