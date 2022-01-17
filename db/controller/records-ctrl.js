@@ -134,11 +134,12 @@ updateUserTokenList = async (req,res) => {
 
 
 insertTrades = async (req,res) => {
+    console.log("entro??")
     const body = req.body;
 	const listRecord = [];
 	listRecord.push(body);
 
-    if(!body.address) {
+    if(!body) {
 		return res.status(400).json({
 				success:false,
 				error:'body mancante',
