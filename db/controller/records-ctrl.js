@@ -162,7 +162,7 @@ insertTrades = async (req,res) => {
 
     }
 
-    const tradeFinded = await collection.findOne({tokenFrom:mock_trade.tokenFrom, tokenTo:mock_trade.tokenTo})
+    const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo})
 
     /*let tradeFindedUpdated  ={
         ...tradeFinded, 
@@ -171,6 +171,7 @@ insertTrades = async (req,res) => {
 
     
     }*/
+    console.log(tradeFinded,body)
 
     if(!tradeFinded){
         await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
