@@ -147,31 +147,11 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    /*let mock_trade = {
-        txId: "0xd313f213c405b9fbf0da9274842d5fdd0db9f6f15e15c4eb7221dd2d74611da0",
-        user: "0x545d1561bb5eC7CF96a36Fb145D3B5928419142f",
-        tokenFrom:"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-        tokenTo:"0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47",
-        amountIn:1000000000000000,
-        amountSwapped:90000,
-        priceFrom:1000000,
-        priceTo:20000,
-        status:true,
-        timestamp:new Date().now()
-
-
-
-    }*/
-
     const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo})
 
-    /*let tradeFindedUpdated  ={
-        ...tradeFinded, 
-        tradeFinded[mock_trade.amountIn]:tradeFinded.amountIn  += mock_trade.amountIn,
-        amountSwapped:tradeFinded.amountSwapped += mock_trade.amountSwapped,
+  
 
-    
-    }*/
+
     console.log(tradeFinded,body)
 
     if(!tradeFinded){
@@ -180,18 +160,26 @@ insertOrUpdateTrades = async (req,res) => {
                 return res.status(201).json({
                     created:true,
                     id: req._id,
-                    message: `${body.address} , ${JSON.stringify(resp)} creato!`,
+                    message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
                     data: body
                 })
             }
             else{
                 return res.status(400).json({
                     err,
-                    message: `${body.address} non creato!`,
+                    message: `${body.txId} non creato!`,
                 })
     
             }
         })		
+    }
+    else {
+        tradeFinded.amountIn = tradeFinded.amountIn += body.amountIn
+        tradeFinded.amountOutMin = tradeFinded.amountOutMin += body.amountOutMin
+        tradeFinded.priceFrom = tradeFinded.priceFrom += body.priceFrom
+        tradeFinded.priceTo = tradeFinded.priceTo += body.priceTo
+
+        await collection.findOneAndUpdate({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo},tradeFinded)
     }
 
 }
