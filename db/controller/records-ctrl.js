@@ -232,6 +232,7 @@ getTrades = async (req,res) => {
 module.exports = {
 	createOrUpdateUser,
     updateUserTokenList,
-    insertTrades
+    insertOrUpdateTrades,
+    getTrades
 
 }
