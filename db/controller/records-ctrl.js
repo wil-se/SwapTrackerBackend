@@ -147,7 +147,7 @@ insertTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    let mock_trade = {
+    /*let mock_trade = {
         txId: "0xd313f213c405b9fbf0da9274842d5fdd0db9f6f15e15c4eb7221dd2d74611da0",
         user: "0x545d1561bb5eC7CF96a36Fb145D3B5928419142f",
         tokenFrom:"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -161,7 +161,7 @@ insertTrades = async (req,res) => {
 
 
 
-    }
+    }*/
 
     const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo})
 
