@@ -151,38 +151,42 @@ insertOrUpdateTrades = async (req,res) => {
 
     if(tradeFindedInBuy.length > 0 ){
         console.log("vediamo",tradeFindedInBuy)
-        const closeTrade = async ()=>{
+        const closeTrade = (async ()=>{
             let sellTrade = body;
             tradeFindedInBuy.map(async (buyTrade)=>{
-                if(sellTrade.amountIn > buyTrade.amountOutMin){
-                    console.log("sono entrato nell'if")
-                    closeTrade()
-                }
-                else {
-                    console.log("sono entrato nell'else")
+                let totalAmountOut = buyTrade.amountOut++
+                if(sellTrade.amountIn > buyTrade.amountOut){
                     await collection
                     .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
                                                         ,{ $set: { status: false } },(err,resp)=>{
                                                             if(!err){
                                                                 console.log("resp:: ", resp)
-                                                                return res.status(201).json({
-                                                                    success:true,
-                                                                    message: `${buyTrade.txId} aggiornato`
-                                                                })
                                                             }
                                                             else{
                                                                 console.log("err", err)
-                                                                return res.status(400).json({
-                                                                    success:false,
-                                                                    message: `${buyTrade.txId} non aggiornato ${err}`,
-                                                                    error: `${err}`
-                                                                }) 
+                                                                
+                                                            }
+                                                        })
+                     await closeTrade()                                   
+                    
+                }
+                else {
+                    await collection
+                    .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
+                                                        ,{ $set: { status: false } },(err,resp)=>{
+                                                            if(!err){
+                                                                console.log("resp:: ", resp)
+                                                                
+                                                            }
+                                                            else{
+                                                                console.log("err", err)
+                                                               
                                                             }
                                                         })
                 }
             })
-        }
-        await closeTrade()
+        })()
+        
     }
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
