@@ -147,51 +147,40 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
+    const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
     
-    
+    let tradeFindendInBuyLocal = tradeFindedInBuy
     
     const closeTrade = async ()=>{
-            const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
-            console.log("vediamo... ", tradeFindedInBuy)
+            
+            console.log("vediamo... ", tradeFindendInBuyLocal)
             let sellTrade = body;
-            tradeFindedInBuy.map(async (buyTrade)=>{
+            tradeFindendInBuyLocal.map(async (buyTrade)=>{
                 
                 console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut, )
-                if(Number(sellTrade.amountIn) > buyTrade.amountOut){
-                    console.log("entro nell'if")
-                    await collection
-                    .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
-                                                        ,{ $set: { status: false } },(err,resp)=>{
-                                                            if(!err){
-                                                                console.log("resp:: dell'if ", resp)
-                                                            }
-                                                            else{
-                                                                console.log("err dell if", err)
-                                                                
-                                                            }
-                                                        })
-                     await closeTrade()                                   
-                    
+                if(buyTrade.status){
+                    if(Number(sellTrade.amountIn) > buyTrade.amountOut){
+                        console.log("entro nell'if")
+                        buyTrade.status = false;
+                         await closeTrade()                                   
+                        
+                    }
+                    else {
+                        console.log("entro nell else")
+                        
+                    }
                 }
-                else {
-                    console.log("entro nell else")
-                    await collection
-                    .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
-                                                        ,{ $set: { status: false } },(err,resp)=>{
-                                                            if(!err){
-                                                                console.log("resp:: else ", resp)
-                                                                
-                                                            }
-                                                            else{
-                                                                console.log("err else", err)
-                                                               
-                                                            }
-                                                        })
+                else{
+                    return;
                 }
             })
+
+        
     }
 
     await closeTrade()
+
+    console.log("vediamo dopo ", tradeFindendInBuyLocal)
         
     
 
