@@ -151,9 +151,9 @@ insertOrUpdateTrades = async (req,res) => {
 
     if(tradeFindedInBuy.length > 0 ){
         console.log("vediamo",tradeFindedInBuy)
-        const closeTrade = ()=>{
+        const closeTrade = async ()=>{
             let sellTrade = body;
-            tradeFindedInBuy.map((buyTrade)=>{
+            tradeFindedInBuy.map(async (buyTrade)=>{
                 if(sellTrade.amountIn > buyTrade.amountOutMin){
                     closeTrade()
                 }
