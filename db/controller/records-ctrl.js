@@ -166,6 +166,7 @@ insertOrUpdateTrades = async (req,res) => {
                         
                     }
                     else {
+                        buyTrade.status = false;
                         console.log("entro nell else")
                         
                     }
@@ -182,7 +183,24 @@ insertOrUpdateTrades = async (req,res) => {
 
     console.log("vediamo dopo ", tradeFindendInBuyLocal)
         
-    
+    tradeFindedInBuy.map(async(tradeBuySelled)=>{
+        await collection.findOneAndUpdate({tokenFrom:tradeBuySelled.tokenFrom,tokenTo:tradeBuySelled.tokenTo,status:true},
+            { $set: { stasus:tradeBuySelled.status  } },
+            (err,resp)=>{
+              if(!err){
+                  return res.status(201).json({
+                      success:true,
+                      message: `${body.address} tokenList aggiornata`
+                  })
+              }
+              else {
+                  return res.status(400).json({
+                      success:false,
+                      message: `${body.address} ${err}`
+                  }) 
+              }
+            })
+    })
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
         if(!err){              
