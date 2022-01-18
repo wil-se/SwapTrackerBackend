@@ -150,6 +150,7 @@ insertOrUpdateTrades = async (req,res) => {
     const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
 
     if(tradeFindedInBuy.length > 0 ){
+        console.log("vediamo",tradeFindedInBuy)
         const closeTrade = ()=>{
             let sellTrade = body;
             tradeFindedInBuy.map((buyTrade)=>{
@@ -157,7 +158,23 @@ insertOrUpdateTrades = async (req,res) => {
                     closeTrade()
                 }
                 else {
-                    buyTrade.status(false)
+                    await collection
+                    .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
+                                                        ,{ $set: { status: false } },(err,resp)=>{
+                                                            if(!err){
+                                                                return res.status(201).json({
+                                                                    success:true,
+                                                                    message: `${buyTrade.txId} aggiornato`
+                                                                })
+                                                            }
+                                                            else{
+                                                                return res.status(400).json({
+                                                                    success:false,
+                                                                    message: `${buyTrade.txId} non aggiornato ${err}`,
+                                                                    error: `${err}`
+                                                                }) 
+                                                            }
+                                                        })
                 }
             })
         }
