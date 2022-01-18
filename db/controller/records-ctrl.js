@@ -150,20 +150,22 @@ insertOrUpdateTrades = async (req,res) => {
     
     
     
-    const closeTrade = (async ()=>{
+    const closeTrade = async ()=>{
             const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
             let sellTrade = body;
             tradeFindedInBuy.map(async (buyTrade)=>{
-                let totalAmountOut = buyTrade.amountOut++
+                let totalAmount = buyTrade.amountOut++
+                console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut)
                 if(sellTrade.amountIn > buyTrade.amountOut){
+                    console.log("entro nell'if")
                     await collection
                     .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
                                                         ,{ $set: { status: false } },(err,resp)=>{
                                                             if(!err){
-                                                                console.log("resp:: ", resp)
+                                                                console.log("resp:: dell'if ", resp)
                                                             }
                                                             else{
-                                                                console.log("err", err)
+                                                                console.log("err dell if", err)
                                                                 
                                                             }
                                                         })
@@ -171,21 +173,24 @@ insertOrUpdateTrades = async (req,res) => {
                     
                 }
                 else {
+                    console.log("entro nell else")
                     await collection
                     .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
                                                         ,{ $set: { status: false } },(err,resp)=>{
                                                             if(!err){
-                                                                console.log("resp:: ", resp)
+                                                                console.log("resp:: else ", resp)
                                                                 
                                                             }
                                                             else{
-                                                                console.log("err", err)
+                                                                console.log("err else", err)
                                                                
                                                             }
                                                         })
                 }
             })
-    })()
+    }
+
+    await closeTrade()
         
     
 
