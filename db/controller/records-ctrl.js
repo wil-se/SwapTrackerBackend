@@ -183,9 +183,10 @@ insertOrUpdateTrades = async (req,res) => {
 
     console.log("vediamo dopo ", tradeFindendInBuyLocal)
         
-    tradeFindedInBuy.map(async(tradeBuySelled)=>{
+    tradeFindedInBuy.map(async(tradeBuySelled,i)=>{
+        console.log("ma itera??", tradeBuySelled, i)
         await collection.findOneAndUpdate({tokenFrom:tradeBuySelled.tokenFrom,tokenTo:tradeBuySelled.tokenTo,status:true},
-            { $set: { stasus:tradeBuySelled.status  } },
+            { $set: { status:tradeBuySelled.status  } },
             (err,resp)=>{
               if(!err){
                   console.log("resp update ", resp)
