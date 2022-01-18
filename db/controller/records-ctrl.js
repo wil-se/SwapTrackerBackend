@@ -152,11 +152,12 @@ insertOrUpdateTrades = async (req,res) => {
     
     const closeTrade = async ()=>{
             const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
+            console.log("vediamo... ", tradeFindedInBuy)
             let sellTrade = body;
             tradeFindedInBuy.map(async (buyTrade)=>{
-                let totalAmount = buyTrade.amountOut++
-                console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut)
-                if(sellTrade.amountIn > buyTrade.amountOut){
+                
+                console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut, )
+                if(Number(sellTrade.amountIn) > buyTrade.amountOut){
                     console.log("entro nell'if")
                     await collection
                     .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
