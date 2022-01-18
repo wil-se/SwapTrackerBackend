@@ -182,6 +182,7 @@ insertOrUpdateTrades = async (req,res) => {
                 }
             })
         }
+        await closeTrade()
     }
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
