@@ -147,31 +147,45 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFinded = await collection.find({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo, status:true}).toArray()
+    const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
 
-  
+    if(tradeFindedInBuy.length > 0 ){
+        const closeTrade = ()=>{
+            let sellTrade = body;
+            tradeFindedInBuy.map((buyTrade)=>{
+                if(sellTrade.amountIn > buyTrade.amountOutMin){
+                    closeTrade()
+                }
+                else {
+                    buyTrade.status(false)
+                }
+            })
+        }
+    }
 
+    await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
+        if(!err){              
+            return res.status(201).json({
+                created:true,
+                id: req._id,
+                message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
+                data: body
+            })
+        }
+        else{
+            return res.status(400).json({
+                err,
+                message: `${body.txId} non creato!`,
+            })
 
-    console.log(tradeFinded,body)
+        }
+    })		
+
 
     
-        await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
-            if(!err){              
-                return res.status(201).json({
-                    created:true,
-                    id: req._id,
-                    message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
-                    data: body
-                })
-            }
-            else{
-                return res.status(400).json({
-                    err,
-                    message: `${body.txId} non creato!`,
-                })
+
     
-            }
-        })		
+        
     
 
         
