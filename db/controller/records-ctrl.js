@@ -188,16 +188,10 @@ insertOrUpdateTrades = async (req,res) => {
             { $set: { stasus:tradeBuySelled.status  } },
             (err,resp)=>{
               if(!err){
-                  return res.status(201).json({
-                      success:true,
-                      message: `${body.address} tokenList aggiornata`
-                  })
+                  console.log("resp update ", resp)
               }
               else {
-                  return res.status(400).json({
-                      success:false,
-                      message: `${body.address} ${err}`
-                  }) 
+                  console.log("err update ", err)
               }
             })
     })
