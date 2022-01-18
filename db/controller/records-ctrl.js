@@ -147,7 +147,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo, status:true}).toArray()
+    const tradeFinded = await collection.find({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo, status:true}).toArray()
 
   
 
