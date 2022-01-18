@@ -155,19 +155,23 @@ insertOrUpdateTrades = async (req,res) => {
             let sellTrade = body;
             tradeFindedInBuy.map(async (buyTrade)=>{
                 if(sellTrade.amountIn > buyTrade.amountOutMin){
+                    console.log("sono entrato nell'if")
                     closeTrade()
                 }
                 else {
+                    console.log("sono entrato nell'else")
                     await collection
                     .findOneAndUpdate({tokenFrom:buyTrade.tokenTo, tokenTo:buyTrade.tokenFrom, status:true}
                                                         ,{ $set: { status: false } },(err,resp)=>{
                                                             if(!err){
+                                                                console.log("resp:: ", resp)
                                                                 return res.status(201).json({
                                                                     success:true,
                                                                     message: `${buyTrade.txId} aggiornato`
                                                                 })
                                                             }
                                                             else{
+                                                                console.log("err", err)
                                                                 return res.status(400).json({
                                                                     success:false,
                                                                     message: `${buyTrade.txId} non aggiornato ${err}`,
