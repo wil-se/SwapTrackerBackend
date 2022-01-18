@@ -147,7 +147,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo})
+    const tradeFinded = await collection.findOne({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo, status:true}).toArray()
 
   
 
@@ -174,21 +174,9 @@ insertOrUpdateTrades = async (req,res) => {
         })		
     }
     else {
-        console.log("entro nell'else ")
-        tradeFinded.amountIn = tradeFinded.amountIn += body.amountIn
-        tradeFinded.amountOutMin = tradeFinded.amountOutMin += body.amountOutMin
-        tradeFinded.priceFrom = tradeFinded.priceFrom += body.priceFrom
-        tradeFinded.priceTo = tradeFinded.priceTo += body.priceTo
 
-        const tradeUpdated = await collection.findOneAndUpdate({tokenFrom:body.tokenFrom, tokenTo:body.tokenTo},tradeFinded)
-        console.log
-        return res.status(201).json({
-            created:true,
-            message:'trade aggiornato',
-            data: tradeFinded
-        })
+        
     }
-
 }
 
 getTrades = async (req,res) => {
