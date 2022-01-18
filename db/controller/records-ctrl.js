@@ -147,11 +147,11 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
-
-    if(tradeFindedInBuy.length > 0 ){
-        console.log("vediamo",tradeFindedInBuy)
-        const closeTrade = (async ()=>{
+    
+    
+    
+    const closeTrade = (async ()=>{
+            const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
             let sellTrade = body;
             tradeFindedInBuy.map(async (buyTrade)=>{
                 let totalAmountOut = buyTrade.amountOut++
@@ -185,9 +185,9 @@ insertOrUpdateTrades = async (req,res) => {
                                                         })
                 }
             })
-        })()
+    })()
         
-    }
+    
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
         if(!err){              
