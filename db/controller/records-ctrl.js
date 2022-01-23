@@ -266,19 +266,19 @@ getDashboardData = async (req,res) => {
 
     const closedTrades = await collection.find({user:body.account,status:100}).toArray()
     const openedTrades = await collection.find({user:body.account,status:{$lt:100}}).toArray()
-
     let singleTradeProfit;
     let totalTradeProfit;
     let listOfTrade = []
-
+    
     closedTrades?.map((closedTrade)=>{
         singleTradeProfit = closedTrade.priceFrom - closedTrade.priceTo
         totalTradeProfit = singleTradeProfit++
         
-
-
+        
+        
     })
-
+    
+    console.log("cosa c'è qui... ",closedTrades,openedTrades)
 
     if(closedTrades && openedTrades){
         return res.status(201).json({
