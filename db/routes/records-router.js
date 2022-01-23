@@ -8,5 +8,6 @@ router.post('/createOrUpdateUser', RecordsCtrl.createOrUpdateUser)
 router.post('/updateUserTokenList', RecordsCtrl.updateUserTokenList)
 router.post('/insertOrUpdateTrade',RecordsCtrl.insertOrUpdateTrades)
 router.post('/getTrades',RecordsCtrl.getTrades)
+router.post('/getDashBoardData',RecordsCtrl.getDashboardData)
 
 module.exports = router
