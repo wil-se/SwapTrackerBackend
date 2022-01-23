@@ -273,7 +273,7 @@ getDashboardData = async (req,res) => {
 
     closedTrades?.map((closedTrade)=>{
         singleTradeProfit = closedTrade.priceFrom - closedTrade.priceTo
-        totalTradeProfit = singleTradeProfit++,
+        totalTradeProfit = singleTradeProfit++
         
 
 
