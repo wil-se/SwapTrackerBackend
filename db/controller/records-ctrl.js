@@ -263,7 +263,7 @@ getDashboardData = async (req,res) => {
     }
 
     const collection = await getCollection('Trades');
-
+    console.log("vediamo l'account ", body.account)
     const closedTrades = await collection.find({user:body.account,status:100}).toArray()
     const openedTrades = await collection.find({user:body.account,status:{$lt:100}}).toArray()
     let singleTradeProfit;
@@ -281,6 +281,7 @@ getDashboardData = async (req,res) => {
     console.log("cosa c'è qui... ",closedTrades,openedTrades)
 
     if(closedTrades && openedTrades){
+        console.log("entro qui??")
         return res.status(201).json({
             created:true,
             data: {
