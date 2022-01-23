@@ -147,7 +147,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFindedInBuy = await collection.find({tokenFrom:body.tokenTo, tokenTo:body.tokenFrom, status:true}).toArray()
+    const tradeFindedInBuy = await collection.find({tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
@@ -158,22 +158,19 @@ insertOrUpdateTrades = async (req,res) => {
             tradeFindendInBuyLocal.map(async (buyTrade)=>{
                 
                 console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut, )
-                if(buyTrade.status){
+                
                     if(Number(sellTrade.amountIn) > buyTrade.amountOut){
                         console.log("entro nell'if")
-                        buyTrade.status = false;
+                        buyTrade.status = 100;
                          await closeTrade()                                   
                         
                     }
                     else {
-                        buyTrade.status = false;
+                        buyTrade.status = ((sellTrade.amountIn/buyTrade.amountOut)*100);
                         console.log("entro nell else")
-                        
+                        return;
                     }
-                }
-                else{
-                    return;
-                }
+                
             })
 
         
@@ -183,9 +180,9 @@ insertOrUpdateTrades = async (req,res) => {
 
     console.log("vediamo dopo ", tradeFindendInBuyLocal)
         
-    tradeFindedInBuy.map(async(tradeBuySelled,i)=>{
+    tradeFindendInBuyLocal.map(async(tradeBuySelled,i)=>{
         console.log("ma itera??", tradeBuySelled, i)
-        await collection.findOneAndUpdate({tokenFrom:tradeBuySelled.tokenFrom,tokenTo:tradeBuySelled.tokenTo,status:true},
+        await collection.findOneAndUpdate({tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
             { $set: { status:tradeBuySelled.status  } },
             (err,resp)=>{
               if(!err){
@@ -255,6 +252,49 @@ getTrades = async (req,res) => {
 
 }
 
+getDashboardData = async (req,res) => {
+    const body = req.body;
+
+    if(!body){
+        return res.status(400).json({
+            success:false,
+            error:'body mancante',
+        })
+    }
+
+    const collection = await getCollection('Trades');
+
+    const closedTrades = await collection.find({user:body.account,status:100}).toArray()
+    const openedTrades = await collection.find({user:body.account,status:{$lt:100}}).toArray()
+
+    let singleTradeProfit;
+    let totalTradeProfit;
+    let listOfTrade = []
+
+    closedTrades?.map((closedTrade)=>{
+        singleTradeProfit = closedTrade.priceFrom - closedTrade.priceTo
+        totalTradeProfit = singleTradeProfit++,
+        
+
+
+    })
+
+
+    if(closedTrades && openedTrades){
+        return res.status(201).json({
+            created:true,
+            data: {
+                closedTrades:closedTrades,
+                openedTrades:openedTrades,
+                totalTradeProfit:totalTradeProfit
+            }
+        })
+
+    }
+
+
+}
+
 
 
 
@@ -263,6 +303,7 @@ module.exports = {
 	createOrUpdateUser,
     updateUserTokenList,
     insertOrUpdateTrades,
-    getTrades
+    getTrades,
+    getDashboardData
 
 }
