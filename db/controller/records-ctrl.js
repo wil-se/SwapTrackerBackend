@@ -104,7 +104,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
             let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
             console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
-                console.log("ma alla fine entro??" )
+                console.log("ma alla fine entro??",oldKeySingleBalanceOverview )
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
                 === 
                 newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
@@ -114,11 +114,12 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)];
 
                 newBalanceOverview.push(oldSingleBalanceOverview)
-                
+                console.log("vediamo questa lista", newBalanceOverview)
                 
                 
             }
             newBalanceOverview.push(oldSingleBalanceOverview)
+            console.log("vediamo la lista ora" , newBalanceOverview)
         })
 
         if(newBalanceOverview.length >0) {
