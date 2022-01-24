@@ -104,6 +104,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
             let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
             console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview)[0], Object.keys(newSingleBalanceOverview)[0])
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
+                console.log("ma alla fine entro??" )
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
                 === 
                 newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
@@ -127,7 +128,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                             if(!err){
                                 return res.status(201).json({
                                     success:true,
-                                    message: `${body.address} balance overview creata`
+                                    message: `${body.address} balance overview aggiornata con nuovo item`
                                 })
                             }
                             else {
