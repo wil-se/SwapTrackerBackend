@@ -68,7 +68,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         let newKey = new Date(Object.keys(singleBalanceOverview))
         
         singleBalanceOverview = {
-                                    [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
+                                    [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
                                 }
         console.log("vediamo questo nuovo item di balance overview ", singleBalanceOverview)
         listRecord.push(singleBalanceOverview)
@@ -96,7 +96,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         let newKey = new Date(Object.keys(singleBalanceOverview))
         
         newSingleBalanceOverview = {
-                                    [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
+                                    [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
                                 }
         console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
         let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
