@@ -108,12 +108,13 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
                 === 
                 newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
-                notUpdated = true
+                (notUpdated = true)
                 :
 
-                oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)];
-
-                newBalanceOverview.push(oldSingleBalanceOverview)
+                (
+                    oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)],
+                    newBalanceOverview.push(oldSingleBalanceOverview)
+                );
                 console.log("vediamo questa lista", newBalanceOverview)
                 
                 
