@@ -94,7 +94,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         let newBalanceOverview = []
         let newSingleBalanceOverview = body.singleBalanceOveview
         let newKey = new Date(Object.keys(newSingleBalanceOverview))
-        
+        let notUpdated = false
         newSingleBalanceOverview = {
                                     [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
                                 }
@@ -107,7 +107,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
                 === 
                 newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
-                null
+                    notUpdated = true
                 :
 
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)];
@@ -137,6 +137,12 @@ createOrUpdateBalanceOverview = async (req,res) => {
                                 }) 
                             }
                           })
+        }
+        else if (notUpdated){
+            return res.status(201).json({
+                success:true,
+                message: `${body.address} balance overview non aggiornata`
+            })
         }
         else {
             collection
