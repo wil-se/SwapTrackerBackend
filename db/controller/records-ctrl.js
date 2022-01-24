@@ -70,7 +70,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         singleBalanceOverview = {
                                     [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
                                 }
-
+        console.log("vediamo questo nuovo item di balance overview ", singleBalanceOverview)
         listRecord.push(singleBalanceOverview)
         await collection
         .findOneAndUpdate({ address: body.address },
@@ -79,7 +79,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                             if(!err){
                                 return res.status(201).json({
                                     success:true,
-                                    message: `${body.address} tokenList creata`
+                                    message: `${body.address} balance overview inizializzata`
                                 })
                             }
                             else {
@@ -98,12 +98,12 @@ createOrUpdateBalanceOverview = async (req,res) => {
         newSingleBalanceOverview = {
                                     [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
                                 }
-         
+        console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
         let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
         userFinded.balanceOveview?.map((oldSingleBalanceOverview)=>{
             let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
+            console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview)
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
-
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
                 === 
                 newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
@@ -127,7 +127,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                             if(!err){
                                 return res.status(201).json({
                                     success:true,
-                                    message: `${body.address} tokenList creata`
+                                    message: `${body.address} balance overview creata`
                                 })
                             }
                             else {
@@ -146,7 +146,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                         if(!err){
                             return res.status(201).json({
                                 success:true,
-                                message: `${body.address} tokenList creata`
+                                message: `${body.address} balance overview aggiornata`
                             })
                         }
                         else {
