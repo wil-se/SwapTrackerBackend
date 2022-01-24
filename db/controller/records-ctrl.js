@@ -429,9 +429,10 @@ getDashboardData = async (req,res) => {
 
 module.exports = {
 	createOrUpdateUser,
+    createOrUpdateBalanceOverview,
     updateUserTokenList,
     insertOrUpdateTrades,
     getTrades,
-    getDashboardData
+    getDashboardData,
 
 }
