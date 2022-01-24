@@ -93,15 +93,15 @@ createOrUpdateBalanceOverview = async (req,res) => {
     else {
         let newBalanceOverview = []
         let newSingleBalanceOverview = body.singleBalanceOveview
-        let newKey = new Date(Object.keys(newSingleBalanceOverview))
+        let newKey = new Date(Object.keys(newSingleBalanceOverview)[0])
         let notUpdated = false
         newSingleBalanceOverview = {
                                     [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
                                 }
         console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
-        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
+        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)[0]).getTime()                        
         userFinded.balanceOveview?.map((oldSingleBalanceOverview)=>{
-            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
+            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)[0]).getTime()
             console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview)[0], Object.keys(newSingleBalanceOverview)[0])
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
                 console.log("ma alla fine entro??" )
