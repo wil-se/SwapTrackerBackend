@@ -68,7 +68,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         let newKey = new Date(Object.keys(singleBalanceOverview))
         
         singleBalanceOverview = {
-                                    [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
+                                    [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
                                 }
         console.log("vediamo questo nuovo item di balance overview ", singleBalanceOverview)
         listRecord.push(singleBalanceOverview)
@@ -93,16 +93,16 @@ createOrUpdateBalanceOverview = async (req,res) => {
     else {
         let newBalanceOverview = []
         let newSingleBalanceOverview = body.singleBalanceOveview
-        let newKey = new Date(Object.keys(newSingleBalanceOverview)[0])
+        let newKey = new Date(Object.keys(newSingleBalanceOverview))
         let notUpdated = false
         newSingleBalanceOverview = {
-                                    [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
+                                    [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
                                 }
         console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
-        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)[0]).getTime()                        
+        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
         userFinded.balanceOveview?.map((oldSingleBalanceOverview)=>{
-            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)[0]).getTime()
-            console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview)[0], Object.keys(newSingleBalanceOverview)[0])
+            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
+            console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
                 console.log("ma alla fine entro??" )
                 oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
