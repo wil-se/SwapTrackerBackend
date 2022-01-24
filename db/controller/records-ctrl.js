@@ -119,7 +119,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 
                 
             }
-            newBalanceOverview.push(oldSingleBalanceOverview)
+           
             console.log("vediamo la lista ora" , newBalanceOverview)
         })
 
