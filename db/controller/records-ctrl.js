@@ -12,6 +12,7 @@ createOrUpdateUser = async (req,res) => {
 			})
 	}
 	const collection = await getCollection('Users');
+    const userCheck = await collection.find({address:body.address})
     const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                         { $set: { lastLogin: body.lastLogin } })
     if(userFinded.value){
@@ -48,6 +49,115 @@ createOrUpdateUser = async (req,res) => {
         })		
     }
 	
+}
+
+createOrUpdateBalanceOverview = async (req,res) => {
+    const body = req.body
+    const listRecord = [];
+    if(!body.address) {
+		return res.status(400).json({
+				success:false,
+				error:'body mancante',
+			})
+	}
+    const collection = await getCollection('Users');
+    const userFinded = await collection.findOne({address:body.address})
+    
+    if(!userFinded.balanceOveview){
+        let singleBalanceOverview = body.singleBalanceOveview
+        let newKey = new Date(Object.keys(singleBalanceOverview))
+        
+        singleBalanceOverview = {
+                                    [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
+                                }
+
+        listRecord.push(singleBalanceOverview)
+        await collection
+        .findOneAndUpdate({ address: body.address },
+                          { $set: { balanceOveview:listRecord} },
+                          (err,resp)=>{
+                            if(!err){
+                                return res.status(201).json({
+                                    success:true,
+                                    message: `${body.address} tokenList creata`
+                                })
+                            }
+                            else {
+                                return res.status(400).json({
+                                    success:false,
+                                    message: `${body.address} ${err}`
+                                }) 
+                            }
+                          })
+    }
+    else {
+        let newBalanceOverview = []
+        let newSingleBalanceOverview = body.singleBalanceOveview
+        let newKey = new Date(Object.keys(singleBalanceOverview))
+        
+        newSingleBalanceOverview = {
+                                    [`${newKey.getFullYear}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
+                                }
+         
+        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
+        userFinded.balanceOveview?.map((oldSingleBalanceOverview)=>{
+            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
+            if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
+
+                oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
+                === 
+                newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
+                null
+                :
+
+                oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)];
+
+                newBalanceOverview.push(oldSingleBalanceOverview)
+
+
+
+            }
+        })
+
+        if(newBalanceOverview.length >0) {
+            await collection
+                .findOneAndUpdate({ address: body.address },
+                          { $set: { balanceOveview:newBalanceOverview} },
+                          (err,resp)=>{
+                            if(!err){
+                                return res.status(201).json({
+                                    success:true,
+                                    message: `${body.address} tokenList creata`
+                                })
+                            }
+                            else {
+                                return res.status(400).json({
+                                    success:false,
+                                    message: `${body.address} ${err}`
+                                }) 
+                            }
+                          })
+        }
+        esle {
+            collection
+            .findOneAndUpdate({ address: body.address },
+                      { $push: { balanceOveview:newSingleBalanceOverview} },
+                      (err,resp)=>{
+                        if(!err){
+                            return res.status(201).json({
+                                success:true,
+                                message: `${body.address} tokenList creata`
+                            })
+                        }
+                        else {
+                            return res.status(400).json({
+                                success:false,
+                                message: `${body.address} ${err}`
+                            }) 
+                        }
+                      })
+        }
+    }
 }
 
 updateUserTokenList = async (req,res) => {
@@ -159,7 +269,7 @@ insertOrUpdateTrades = async (req,res) => {
                 
                 console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut, )
                 
-                    if(Number(sellTrade.amountIn) > buyTrade.amountOut){
+                    if(Number(sellTrade.amountIn) > buyTrade.amountOut && buyTrade.status !== 100){
                         console.log("entro nell'if")
                         buyTrade.status = 100;
                          await closeTrade()                                   
@@ -266,19 +376,37 @@ getDashboardData = async (req,res) => {
     console.log("vediamo l'account ", body.account)
     const closedTrades = await collection.find({user:body.account,status:100}).toArray()
     const openedTrades = await collection.find({user:body.account,status:{$lt:100}}).toArray()
-    let singleTradeProfit;
-    let totalTradeProfit;
-    let listOfTrade = []
+    let uniqueOpenedTrades = []
+    let closedPlList = {}
+
+    /*openedTrades?.map((openedTrade)=>{
+        closedTrades?.map((closedTrade)=>{
+            if(closedTrade.tokenTo !== openedTrade.tokenFrom){
+                uniqueOpenedTrades.push(openedTrade);
+            }
+
+        })
+    })
+
+    const calcPl = (trade) => {
+        let valueIn = trade?.amountIn * trade?.priceFrom;
+        let valueOut = trade?.amountOut * trade?.priceTo;
+        return valueOut - valueIn;
+    }
     
     closedTrades?.map((closedTrade)=>{
-        singleTradeProfit = closedTrade.priceFrom - closedTrade.priceTo
-        totalTradeProfit = singleTradeProfit++
-        
-        
-        
-    })
-    
-    console.log("cosa c'è qui... ",closedTrades,openedTrades)
+        let dateTrade = new Date(closedTrade.timestamp);
+
+        if(!closedPlList[dateTrade.getDate()]){
+            closedPlList[dateTrade.getDate()] = calcPl(closedTrade) 
+
+        }
+        else{
+            closedPlList[dateTrade.getDate()] += calcPl(closedTrade) 
+        }
+
+    })*/
+
 
     if(closedTrades && openedTrades){
         console.log("entro qui??")
@@ -287,7 +415,6 @@ getDashboardData = async (req,res) => {
             data: {
                 closedTrades:closedTrades,
                 openedTrades:openedTrades,
-                totalTradeProfit:totalTradeProfit
             }
         })
 
