@@ -93,7 +93,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
     else {
         let newBalanceOverview = []
         let newSingleBalanceOverview = body.singleBalanceOveview
-        let newKey = new Date(Object.keys(singleBalanceOverview))
+        let newKey = new Date(Object.keys(newSingleBalanceOverview))
         
         newSingleBalanceOverview = {
                                     [`${newKey.getFullYear()}/${newKey.getMonth()}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
