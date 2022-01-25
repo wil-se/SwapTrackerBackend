@@ -380,18 +380,18 @@ getTrades = async (req,res) => {
 
 getDashboardData = async (req,res) => {
     const body = req.body;
-
+    
     if(!body){
         return res.status(400).json({
             success:false,
             error:'body mancante',
         })
     }
-
+    let address = body.address.toLowerCase();
     const collection = await getCollection('Trades');
     console.log("vediamo l'account ", body.address)
-    const closedTrades = await collection.find({user:body.address,status:100}).toArray()
-    const openedTrades = await collection.find({user:body.address,status:{$lt:100}}).toArray()
+    const closedTrades = await collection.find({user:address,status:100}).toArray()
+    const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
     let uniqueOpenedTrades = []
     let closedPlList = {}
 
