@@ -399,7 +399,7 @@ getDashboardData = async (req,res) => {
 
     openedTrades.map((openedTrade)=> {
         let amountOutMultiplyForPrice = openedTrade.amountOut * openedTrade.priceTo;
-        totalOpenTradesValue += amountOutMultiplyForPrice; 
+        totalOpenTradesValue = totalOpenTradesValue += amountOutMultiplyForPrice; 
     })
     /*openedTrades?.map((openedTrade)=>{
         closedTrades?.map((closedTrade)=>{
