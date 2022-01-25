@@ -91,7 +91,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                           })
     }
     else {
-        let newBalanceOverview = []
+        let oldBalanceOverview;
         let newSingleBalanceOverview = body.singleBalanceOverview
         let newKey = new Date(Object.keys(newSingleBalanceOverview))
         let notUpdated = false
@@ -112,8 +112,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 :
 
                 (
-                    oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] = newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)],
-                    newBalanceOverview.push(oldSingleBalanceOverview)
+                    oldBalanceOverview = oldSingleBalanceOverview
                 );
                 console.log("vediamo questa lista", newBalanceOverview)
                 
@@ -123,14 +122,14 @@ createOrUpdateBalanceOverview = async (req,res) => {
             console.log("vediamo la lista ora" , newBalanceOverview)
         })
 
-        if(newBalanceOverview.length >0) {
-            let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
-            let keyforFilder = "balanceOverview."+ Object.keys(newSingleBalanceOverview)[0];
+        if(oldBalanceOverview) {
             let objectToUpdate = {}
-            objectToUpdate[keyforDb] = Object.values(oldSingleBalanceOverview)[0];
             let queryFilter = {}
+            let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
+            let keyforFilter = "balanceOverview."+ Object.keys(newSingleBalanceOverview)[0];
+            objectToUpdate[keyforDb] = Object.values(oldBalanceOverview)[0];
             queryFilter["address"] = body.address;
-            queryFilter[keyforFilder] = Object.values(newSingleBalanceOverview)[0];
+            queryFilter[keyforFilter] = Object.values(newSingleBalanceOverview)[0];
 
             console.log("vediamo questi filtri ", queryFilter,objectToUpdate)
             await collection
