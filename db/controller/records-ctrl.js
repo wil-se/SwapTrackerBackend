@@ -128,6 +128,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
             let queryFilter = {}
             queryFilter["address"] = body.address;
             queryFilter[keyforDb] = Object.keys(newSingleBalanceOverview)[0]
+            console.log("vediamo questi filtri ", queryFilter)
             await collection
                 .findOneAndUpdate(queryFilter,
                           { $set: newBalanceOverview },
