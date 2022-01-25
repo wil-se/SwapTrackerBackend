@@ -124,14 +124,14 @@ createOrUpdateBalanceOverview = async (req,res) => {
         })
 
         if(newBalanceOverview.length >0) {
-            let keyforDb = "balance.$."+ Object.keys(newSingleBalanceOverview)[0];
-            let queryFilter = {}
-            queryFilter[keyforDb] = Object.values(newSingleBalanceOverview)[0];
-            
+            let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
+            let objectToUpdate = {}
+            objectToUpdate[keyforDb] = Object.values(newSingleBalanceOverview)[0];
+            let queryFilter
             console.log("vediamo questi filtri ", queryFilter)
             await collection
                 .findOneAndUpdate({address:body.address},
-                          { $set: queryFilter },
+                          { $set: objectToUpdate },
                           (err,resp)=>{
                             if(!err){
                                 return res.status(201).json({
