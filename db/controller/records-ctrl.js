@@ -114,12 +114,12 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 (
                     oldBalanceOverview = oldSingleBalanceOverview
                 );
-                console.log("vediamo questa lista", newBalanceOverview)
+                console.log("vediamo questo oggetto", oldBalanceOverview)
                 
                 
             }
            
-            console.log("vediamo la lista ora" , newBalanceOverview)
+            console.log("vediamo l'oggetto ora" , oldBalanceOverview)
         })
 
         if(oldBalanceOverview) {
