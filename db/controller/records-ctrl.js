@@ -365,7 +365,7 @@ getTrades = async (req,res) => {
 
     const collection = await getCollection('Trades');
 
-    const trades = await collection.find({user:body.account}).toArray();
+    const trades = await collection.find({user:body.address}).toArray();
 
     console.log("vediamo ",trades)
 
@@ -375,10 +375,6 @@ getTrades = async (req,res) => {
             data: trades
         })
     } 
-
-
-
-
 
 }
 
@@ -393,12 +389,18 @@ getDashboardData = async (req,res) => {
     }
 
     const collection = await getCollection('Trades');
-    console.log("vediamo l'account ", body.account)
-    const closedTrades = await collection.find({user:body.account,status:100}).toArray()
-    const openedTrades = await collection.find({user:body.account,status:{$lt:100}}).toArray()
+    console.log("vediamo l'account ", body.address)
+    const closedTrades = await collection.find({user:body.address,status:100}).toArray()
+    const openedTrades = await collection.find({user:body.address,status:{$lt:100}}).toArray()
     let uniqueOpenedTrades = []
     let closedPlList = {}
 
+    let totalOpenTradesValue = 0;
+
+    openedTrades.map((openedTrade)=> {
+        let amountOutMultiplyForPrice = openedTrade.amountOut * openedTrade.priceTo;
+        totalOpenTradesValue += amountOutMultiplyForPrice; 
+    })
     /*openedTrades?.map((openedTrade)=>{
         closedTrades?.map((closedTrade)=>{
             if(closedTrade.tokenTo !== openedTrade.tokenFrom){
@@ -426,8 +428,6 @@ getDashboardData = async (req,res) => {
         }
 
     })*/
-
-
     if(closedTrades && openedTrades){
         console.log("entro qui??")
         return res.status(201).json({
@@ -435,6 +435,7 @@ getDashboardData = async (req,res) => {
             data: {
                 closedTrades:closedTrades,
                 openedTrades:openedTrades,
+                totalOpenTradesValue:totalOpenTradesValue
             }
         })
 
