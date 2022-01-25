@@ -63,8 +63,8 @@ createOrUpdateBalanceOverview = async (req,res) => {
     const collection = await getCollection('Users');
     const userFinded = await collection.findOne({address:body.address})
     
-    if(!userFinded.balanceOveview){
-        let singleBalanceOverview = body.singleBalanceOveview
+    if(!userFinded.balanceOverview){
+        let singleBalanceOverview = body.singleBalanceOverview
         let newKey = new Date(Object.keys(singleBalanceOverview))
         
         singleBalanceOverview = {
@@ -92,7 +92,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
     }
     else {
         let newBalanceOverview = []
-        let newSingleBalanceOverview = body.singleBalanceOveview
+        let newSingleBalanceOverview = body.singleBalanceOverview
         let newKey = new Date(Object.keys(newSingleBalanceOverview))
         let notUpdated = false
         newSingleBalanceOverview = {
@@ -100,7 +100,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                                 }
         console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
         let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
-        userFinded.balanceOveview?.map((oldSingleBalanceOverview)=>{
+        userFinded.balanceOverview?.map((oldSingleBalanceOverview)=>{
             let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
             console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
             if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
