@@ -74,7 +74,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         listRecord.push(singleBalanceOverview)
         await collection
         .findOneAndUpdate({ address: body.address },
-                          { $set: { balanceOveview:listRecord} },
+                          { $set: { balanceOverview:listRecord} },
                           (err,resp)=>{
                             if(!err){
                                 return res.status(201).json({
@@ -126,7 +126,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         if(newBalanceOverview.length >0) {
             await collection
                 .findOneAndUpdate({ address: body.address },
-                          { $set: { balanceOveview:newBalanceOverview} },
+                          { $set: { balanceOverview:newBalanceOverview} },
                           (err,resp)=>{
                             if(!err){
                                 return res.status(201).json({
@@ -151,7 +151,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
         else {
             collection
             .findOneAndUpdate({ address: body.address },
-                      { $push: { balanceOveview:newSingleBalanceOverview} },
+                      { $push: { balanceOverview:newSingleBalanceOverview} },
                       (err,resp)=>{
                         if(!err){
                             return res.status(201).json({
