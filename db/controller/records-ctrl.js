@@ -25,9 +25,10 @@ createOrUpdateUser = async (req,res) => {
     }
     else{
         body.tokenList = {
-            1:[process.env.WETH],
-            56:[process.env.WBNB]
+            1:[process.env.WETH.toLowerCase()],
+            56:[process.env.WBNB.toLowerCase()]
         }
+        body.address = body.address.toLowerCase()
         listRecord.push(body);
         
         await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
@@ -191,14 +192,15 @@ updateUserTokenList = async (req,res) => {
 				error:'body mancante',
 			})
 	}
-
+    let tokenList = Array(body.tokenList[body.chainId]).map((tokenAddress)=> {return tokenAddress.toLowerCase()})
+    body.tokenList[body.chainId] = tokenList
 	const collection = await getCollection('Users');
     const userFinded = await collection.findOne({ address: body.address })
     if(!userFinded.tokenList){
 
         await collection
             .findOneAndUpdate({ address: body.address },
-                              { $set: { tokenList: body.tokenList } },
+                              { $set: { tokenList: tokenList } },
                               (err,resp)=>{
                                 if(!err){
                                     return res.status(201).json({
@@ -216,7 +218,7 @@ updateUserTokenList = async (req,res) => {
     }
     if(userFinded.tokenList[body.chainId]){
         let oldTokenListLength = userFinded.tokenList[body.chainId].length
-        let newTokenListByChainId = [...userFinded.tokenList[body.chainId],...body.tokenList[body.chainId]]
+        let newTokenListByChainId = [...userFinded.tokenList[body.chainId],...tokenList]
         userFinded.tokenList[body.chainId] = Array.from(new Set(newTokenListByChainId))
 
         await collection
