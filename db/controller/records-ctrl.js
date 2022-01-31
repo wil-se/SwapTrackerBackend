@@ -292,6 +292,7 @@ insertOrUpdateTrades = async (req,res) => {
                     if(Number(sellTrade.amountIn) > buyTrade.amountOut && buyTrade.status !== 100){
                         console.log("entro nell'if")
                         buyTrade.status = 100;
+                        buyTrade.closedDate = new Date();
                          await closeTrade()                                   
                         
                     }
