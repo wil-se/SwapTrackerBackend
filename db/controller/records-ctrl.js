@@ -192,6 +192,7 @@ updateUserTokenList = async (req,res) => {
 				error:'body mancante',
 			})
 	}
+    console.log("vediamo ",Array(body.tokenList[body.chainId]))
     let tokenList = Array(body.tokenList[body.chainId]).map((tokenAddress)=> {return tokenAddress.toLowerCase()})
     body.tokenList[body.chainId] = tokenList
 	const collection = await getCollection('Users');
