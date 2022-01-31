@@ -271,6 +271,7 @@ insertOrUpdateTrades = async (req,res) => {
     const body = req.body;
     body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
     body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
+    body.user = body.user && body.user.toLowerCase()
     console.log("vediamo adesso il body tutto lower case")
 	const listRecord = [];
 	listRecord.push(body);
