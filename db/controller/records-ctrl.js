@@ -284,7 +284,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:99}}).toArray()
+    const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
@@ -305,7 +305,7 @@ insertOrUpdateTrades = async (req,res) => {
                     }
                     else {
                         buyTrade.status = ((sellTrade.amountIn/buyTrade.amountOut)*100);
-                        if(buyTrade.status > 98){buyTrade.closedDate = new Date();}
+                        if(buyTrade.status > 97){buyTrade.status = 100; buyTrade.closedDate = new Date();}
                         console.log("entro nell else")
                         return;
                     }
@@ -321,16 +321,31 @@ insertOrUpdateTrades = async (req,res) => {
         
     tradeFindendInBuyLocal.map(async(tradeBuySelled,i)=>{
         console.log("ma itera??", tradeBuySelled, i)
-        await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
-            { $set: { status:tradeBuySelled.status  } },
-            (err,resp)=>{
-              if(!err){
-                  console.log("resp update ", resp)
-              }
-              else {
-                  console.log("err update ", err)
-              }
-            })
+        if(tradeBuySelled.closedDate){
+            await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
+                { $set: { status:tradeBuySelled.status, closedDate:tradeBuySelled.closedDate  } },
+                (err,resp)=>{
+                  if(!err){
+                      console.log("resp update ", resp)
+                  }
+                  else {
+                      console.log("err update ", err)
+                  }
+                })
+
+        }
+        else {
+            await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
+                { $set: { status:tradeBuySelled.status} },
+                (err,resp)=>{
+                  if(!err){
+                      console.log("resp update ", resp)
+                  }
+                  else {
+                      console.log("err update ", err)
+                  }
+                })
+        }
     })
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
