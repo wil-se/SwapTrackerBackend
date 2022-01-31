@@ -302,7 +302,7 @@ insertOrUpdateTrades = async (req,res) => {
                         buyTrade.closedDate = new Date();
                          await closeTrade()                                   
                         
-                    }
+                    } 
                     else {
                         buyTrade.status = ((sellTrade.amountIn/buyTrade.amountOut)*100);
                         if(buyTrade.status > 99){buyTrade.status = 100; buyTrade.closedDate = new Date();}
