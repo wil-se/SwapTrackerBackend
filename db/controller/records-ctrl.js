@@ -284,7 +284,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
+    const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:99}}).toArray()
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
@@ -305,6 +305,7 @@ insertOrUpdateTrades = async (req,res) => {
                     }
                     else {
                         buyTrade.status = ((sellTrade.amountIn/buyTrade.amountOut)*100);
+                        if(buyTrade.status > 98){buyTrade.closedDate = new Date();}
                         console.log("entro nell else")
                         return;
                     }
