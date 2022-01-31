@@ -269,6 +269,8 @@ updateUserTokenList = async (req,res) => {
 insertOrUpdateTrades = async (req,res) => {
     console.log("entro??")
     const body = req.body;
+    body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
+    body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
 	const listRecord = [];
 	listRecord.push(body);
 
@@ -391,7 +393,7 @@ getDashboardData = async (req,res) => {
             error:'body mancante',
         })
     }
-    let address = body.address.toLowerCase();
+    let address = body.address && body.address.toLowerCase();
     const collection = await getCollection('Trades');
     console.log("vediamo l'account ", body.address)
     const closedTrades = await collection.find({user:address,status:100}).toArray()
