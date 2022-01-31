@@ -271,6 +271,7 @@ insertOrUpdateTrades = async (req,res) => {
     const body = req.body;
     body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
     body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
+    console.log("vediamo adesso il body tutto lower case")
 	const listRecord = [];
 	listRecord.push(body);
 
@@ -282,7 +283,7 @@ insertOrUpdateTrades = async (req,res) => {
 	}
 	const collection = await getCollection('Trades');
 
-    const tradeFindedInBuy = await collection.find({tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
+    const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
@@ -318,7 +319,7 @@ insertOrUpdateTrades = async (req,res) => {
         
     tradeFindendInBuyLocal.map(async(tradeBuySelled,i)=>{
         console.log("ma itera??", tradeBuySelled, i)
-        await collection.findOneAndUpdate({tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
+        await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
             { $set: { status:tradeBuySelled.status  } },
             (err,resp)=>{
               if(!err){
