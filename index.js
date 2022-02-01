@@ -15,13 +15,6 @@ const PORT = 3333;
 const KEY = "/etc/letsencrypt/live/dev.swaptracker.io-0001/privkey.pem";
 const CERT = "/etc/letsencrypt/live/dev.swaptracker.io-0001/fullchain.pem"
 
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-}
-
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
@@ -33,7 +26,6 @@ app.use(express.urlencoded({extended: true}));
 app.get('/', (req, res) => {
 	res.send('Sto runnando...... ')
 })
-app.use(allowCrossDomain());
 app.use('/data', recordsRouter)
 
 https.createServer({
