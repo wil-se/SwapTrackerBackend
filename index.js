@@ -16,7 +16,9 @@ const CERT = "/etc/letsencrypt/live/dev.swaptracker.io-0001/fullchain.pem"
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+	origin: 'dev.swaptracker.io'
+}));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
