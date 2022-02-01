@@ -11,8 +11,8 @@ const app = express();
 const recordsRouter = require('./db/routes/records-router');
 
 const PORT = 3333;
-const KEY = "/home/ubuntu/certs/key.pem";
-const CERT = "/home/ubuntu/certs/cert.pem"
+const KEY = "/etc/letsencrypt/live/dev.swaptracker.io/privkey.pem";
+const CERT = "/etc/letsencrypt/live/dev.swaptracker.io/fullchain.pem"
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
