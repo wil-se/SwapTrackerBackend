@@ -1,4 +1,6 @@
-require('dotenv/config');
+require('dotenv').config({
+	path: '/home/ubuntu/SwapTrackerBackend/.env'
+});
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
@@ -28,4 +30,4 @@ https.createServer({
     key: fs.readFileSync(KEY),
     cert: fs.readFileSync(CERT),
     passphrase: 'swaptracker'
-}, app).listen(3333);
+}, app).listen(PORT);
