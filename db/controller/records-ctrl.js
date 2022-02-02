@@ -305,7 +305,7 @@ insertOrUpdateTrades = async (req,res) => {
                     } 
                     else {
                         buyTrade.status = buyTrade.status += ((sellTrade.amountIn/buyTrade.amountOut)*100);
-                        if(buyTrade.status > 99.5){buyTrade.status = 100; buyTrade.closedDate = new Date();}
+                        if(buyTrade.status > 98.8){buyTrade.status = 100; buyTrade.closedDate = new Date();}
                         console.log("entro nell else")
                         return;
                     }
