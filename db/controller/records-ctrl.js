@@ -26,7 +26,7 @@ createOrUpdateUser = async (req,res) => {
     else{
         body.tokenList = {
             1:[process.env.WETH.toLowerCase()],
-            56:[process.env.WBNB.toLowerCase(),process.env.BUSD.toLowerCase(),process.env.USDT.toLowerCase(),process.env.SWPT]
+            56:[process.env.WBNB.toLowerCase(),process.env.BUSD.toLowerCase(),process.env.USDT.toLowerCase(),process.env.SWPT.toLowerCase()]
         }
         body.address = body.address.toLowerCase()
         listRecord.push(body);
