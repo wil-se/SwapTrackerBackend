@@ -31,7 +31,7 @@ createOrUpdateUser = async (req,res) => {
         body.address = body.address.toLowerCase()
         listRecord.push(body);
         
-        await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
+        return await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
             if(!err){              
                 return res.status(201).json({
                     created:true,
