@@ -26,7 +26,7 @@ createOrUpdateUser = async (req,res) => {
     else{
         body.tokenList = {
             1:[process.env.WETH.toLowerCase()],
-            56:[process.env.WBNB.toLowerCase()]
+            56:[process.env.WBNB.toLowerCase(),process.env.BUSD.toLowerCase(),process.env.USDT.toLowerCase(),process.env.SWPT]
         }
         body.address = body.address.toLowerCase()
         listRecord.push(body);
@@ -294,9 +294,9 @@ insertOrUpdateTrades = async (req,res) => {
             let sellTrade = body;
             tradeFindendInBuyLocal.map(async (buyTrade)=>{
                 
-                console.log(sellTrade.amountIn > buyTrade.amountOut, sellTrade.amountIn , buyTrade.amountOut, )
+                console.log(Number(sellTrade.amountIn) > Number(buyTrade.amountOut), sellTrade.amountIn , buyTrade.amountOut, )
                 
-                    if(Number(sellTrade.amountIn) > buyTrade.amountOut && buyTrade.status !== 100){
+                    if(Number(sellTrade.amountIn) > Number(buyTrade.amountOut) && buyTrade.status !== 100){
                         console.log("entro nell'if")
                         buyTrade.status = 100;
                         buyTrade.closedDate = new Date();
@@ -304,7 +304,7 @@ insertOrUpdateTrades = async (req,res) => {
                         
                     } 
                     else {
-                        buyTrade.status = ((sellTrade.amountIn/buyTrade.amountOut)*100);
+                        buyTrade.status = buyTrade.status += ((sellTrade.amountIn/buyTrade.amountOut)*100);
                         if(buyTrade.status > 99.5){buyTrade.status = 100; buyTrade.closedDate = new Date();}
                         console.log("entro nell else")
                         return;
