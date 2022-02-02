@@ -3,7 +3,7 @@ const {MongoClient} = require('mongodb')
 
 const connectMongodb = async () =>{
  
-    const client = await MongoClient.connect(process.env.DB_URL,{useNewUrlParser: true,useUnifiedTopology: true,reconnectTries:60,reconnectInterval:1000})
+    const client = await MongoClient.connect(process.env.DB_URL,{useNewUrlParser: true,useUnifiedTopology: true})
         .catch(error => console.log(error))
 
     const db = await client.db('Cluster0');
