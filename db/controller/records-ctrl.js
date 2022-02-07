@@ -1,5 +1,14 @@
 const {getCollection} = require('../dataModels/dataModel')
 
+
+getFiats = async (req,res) => {
+    const collection = await getCollection('FiatPrices');
+    collection.array.forEach(element => {
+        console.log(element);
+    });
+}
+
+
 createOrUpdateUser = async (req,res) => {
 	const body = req.body;
 	const listRecord = [];
@@ -479,5 +488,5 @@ module.exports = {
     insertOrUpdateTrades,
     getTrades,
     getDashboardData,
-
+    getFiats,
 }
