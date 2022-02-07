@@ -9,7 +9,7 @@ getFiats = async (req,res) => {
     // data.forEach(element => {
     //     console.log(element);
     // });
-    // res.send({})
+    res.send({})
 }
 
 
