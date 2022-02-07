@@ -11,7 +11,7 @@ getFiats = async (req,res) => {
         console.log(element);
         response.push(element)
     });
-    res.send(response)
+    res.send(data)
 }
 
 
