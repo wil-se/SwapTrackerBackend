@@ -15,6 +15,8 @@ const PORT = 3333;
 const KEY = "/etc/letsencrypt/live/dev.swaptracker.io-0001/privkey.pem";
 const CERT = "/etc/letsencrypt/live/dev.swaptracker.io-0001/fullchain.pem"
 
+console.log("init api")
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
