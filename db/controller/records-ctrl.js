@@ -3,10 +3,11 @@ const {getCollection} = require('../dataModels/dataModel')
 
 getFiats = async (req,res) => {
     console.log("getFiats")
-    // const collection = await getCollection('FiatPrices');
-    // collection.array.forEach(element => {
-    //     console.log(element);
-    // });
+    const collection = await getCollection('FiatPrices');
+    const data = collection.find({})
+    data.forEach(element => {
+        console.log(element);
+    });
 }
 
 
