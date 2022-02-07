@@ -2,13 +2,13 @@ const {getCollection} = require('../dataModels/dataModel')
 
 
 getFiats = async (req,res) => {
-    console.log("getFiats");
-    //let response = []
-    //const collection = await getCollection('FiatPrices');
-    //const data = collection.find({});
-    //console.log(data);
-    //
-    //res.send(data)
+    console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEee");
+    let response = []
+    // const collection = await getCollection('FiatPrices');
+    // const data = collection.find({});
+    // console.log(data);
+    
+    res.send({})
 }
 
 
