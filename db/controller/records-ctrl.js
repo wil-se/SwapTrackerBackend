@@ -7,10 +7,7 @@ getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
     const data = collection.find({});
     console.log(data);
-    data.forEach(element => {
-        console.log(element);
-        response.push(element)
-    });
+    
     res.send(data)
 }
 
