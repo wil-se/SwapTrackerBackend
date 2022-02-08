@@ -2,14 +2,22 @@ const {getCollection} = require('../dataModels/dataModel')
 
 
 getFiats = async (req,res) => {
-    console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEee");
-    let response = []
     const collection = await getCollection('FiatPrices');
-    const data = collection.find({});
-    console.log(data);
-    
-    res.send({})
+    const data = await collection.find({}).toArray((err, records) => {
+        console.log(records);
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }   
+        if (!records.length) {
+            return res 
+                .status(404)
+                .json({ success: false, error: "record not found" })
+        }   
+        return res.status(200).json({ success: true, data: records })
+    }); 
+    res.send(data)
 }
+
 
 
 createOrUpdateUser = async (req,res) => {
