@@ -4,7 +4,6 @@ const {getCollection} = require('../dataModels/dataModel')
 getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
     const data = await collection.find({}).toArray((err, records) => {
-        console.log(records);
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }   
@@ -15,7 +14,6 @@ getFiats = async (req,res) => {
         }   
         return res.status(200).json({ success: true, data: records })
     }); 
-    res.send(data)
 }
 
 
