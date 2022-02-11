@@ -483,12 +483,11 @@ getDashboardData = async (req,res) => {
         
     })
 
-    if(closedTrades && openedTrades){
+    if(openedTradesFormatted.length>0){
         console.log("entro qui??")
         return res.status(201).json({
             created:true,
-            data: {
-                closedTrades:closedTrades,
+            data: {   
                 openedTrades:openedTradesFormatted,
                 totalOpenTradesValue:totalOpenTradesValue
             }
