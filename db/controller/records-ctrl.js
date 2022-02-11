@@ -1,5 +1,5 @@
 const {getCollection} = require('../dataModels/dataModel')
-
+import BigNumber from 'bignumber.js'
 
 getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
@@ -432,9 +432,8 @@ getDashboardData = async (req,res) => {
     let address = body.address && body.address.toLowerCase();
     const collection = await getCollection('Trades');
     console.log("vediamo l'account ", body.address)
-    const closedTrades = await collection.find({user:address,status:100}).toArray()
     const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
-    let uniqueOpenedTrades = []
+    let openedTradesFormatted = []
     let closedPlList = {}
 
     let totalOpenTradesValue = 0;
@@ -470,13 +469,27 @@ getDashboardData = async (req,res) => {
         }
 
     })*/
+
+    openedTrades.map((openedTrade)=>{
+        
+            openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
+            openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
+            openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
+            openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
+            openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
+            openedTrade.tokenFrom = openedTrade.tokenFrom
+            openedTrade.tokenTo = openedTrade.tokenTo
+            openedTradesFormatted.push(openedTrade)
+        
+    })
+
     if(closedTrades && openedTrades){
         console.log("entro qui??")
         return res.status(201).json({
             created:true,
             data: {
                 closedTrades:closedTrades,
-                openedTrades:openedTrades,
+                openedTrades:openedTradesFormatted,
                 totalOpenTradesValue:totalOpenTradesValue
             }
         })
