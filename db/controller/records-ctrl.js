@@ -1,5 +1,5 @@
 const {getCollection} = require('../dataModels/dataModel')
-import BigNumber from 'bignumber.js'
+const BigNumber = require('bignumber.js')
 
 getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
