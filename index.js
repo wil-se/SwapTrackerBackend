@@ -22,4 +22,4 @@ app.get('/', (req, res) => {
 })
 app.use('/data', recordsRouter)
 
-http.createServer(app).listen(PORT);
+http.createServer(app, 'localhost').listen(PORT);
