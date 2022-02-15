@@ -92,7 +92,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
     if(!body.address) {
 		return res.status(400).json({
 				success:false,
-				error:'body mancante',
+				error: "body mancante",
 			})
 	}
     
@@ -159,14 +159,10 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
                 console.log("createOrUpdateBalanceOverview(): Keys of oldKeySingleBalanceOverview, newKeySingleBalanceOverview ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
                 if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
-                    console.log("oldKeySingleBalanceOverview === newKeySingleBalanceOverview", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
+                    console.log("createOrUpdateBalanceOverview(): oldKeySingleBalanceOverview === newKeySingleBalanceOverview | ", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
                     oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
-                    console.log("oldBalanceOverview", oldBalanceOverview)
-                    
-                    
+                    console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
                 }
-            
-                console.log("createOrUpdateBalanceOverview(): oldBalanceOverview" , oldBalanceOverview)
             })
 
             if(oldBalanceOverview) {
