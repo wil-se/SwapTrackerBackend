@@ -17,8 +17,7 @@ const connectMongodb = async () =>{
 
         mongoClient = await MongoClient.connect(process.env.DB_URL, {
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-            poolSize: 10
+            useUnifiedTopology: true
         }).catch(error => console.log(error));
 
         if ( ! (await mongoClient.isConnected())) {
