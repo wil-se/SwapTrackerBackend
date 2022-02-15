@@ -26,8 +26,6 @@ getFiats = async (req,res) => {
     }
 }
 
-
-
 createOrUpdateUser = async (req,res) => {
 	const body = req.body;
 	const listRecord = [];
@@ -42,7 +40,6 @@ createOrUpdateUser = async (req,res) => {
 
     try{
         const collection = await getCollection('Users');
-        const userCheck = await collection.find({address:body.address})
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                             { $set: { lastLogin: body.lastLogin } })
         if(userFinded.value){
@@ -81,7 +78,7 @@ createOrUpdateUser = async (req,res) => {
         }
     }catch(err) {
         return res.status(400).json({
-            err,
+            error: err,
             message: `Database error`,
         });
     }
