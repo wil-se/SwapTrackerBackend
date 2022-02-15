@@ -1,9 +1,5 @@
-require('dotenv').config({
-	path: '/home/ubuntu/SwapTrackerBackend/.env'
-});
-
 const express = require('express');
-const https = require('https');
+const http = require('http');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -18,11 +14,13 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({
+    extended: true
+}));
 
 app.get('/', (req, res) => {
 	res.send('Sto runnando...... ')
 })
 app.use('/data', recordsRouter)
 
-https.createServer(app).listen(PORT);
+http.createServer(app, 'localhost').listen(PORT);
