@@ -1,11 +1,13 @@
 const {connectMongodb} = require('../db');
 
 const getCollection = async(nameCollection) =>{
- 
-  const db = await connectMongodb()
-  
-  const collection = await db.collection(nameCollection)
-  return collection;
+  try{
+    const db = await connectMongodb()
+    const collection = await db.collection(nameCollection)
+    return collection;
+  }catch(err){
+    return err;
+  }
 }
 
 module.exports = {getCollection};
