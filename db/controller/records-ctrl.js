@@ -160,7 +160,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 console.log("createOrUpdateBalanceOverview(): Keys of oldKeySingleBalanceOverview, newKeySingleBalanceOverview ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
                 if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
                     console.log("createOrUpdateBalanceOverview(): oldKeySingleBalanceOverview === newKeySingleBalanceOverview | ", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
-                    oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
+                    oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)[0]]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)[0]] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
                     console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
                 }
             })
