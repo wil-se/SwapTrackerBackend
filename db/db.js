@@ -1,11 +1,11 @@
-require('dotenv').config({path:'../.env'});
+require('dotenv').config({ path: `${__dirname}/../.env`})
 
 const {MongoClient} = require('mongodb')
 const connectMongodb = async () =>{
     
     try{
         const client = await MongoClient.connect(
-            "mongodb+srv://swaptrackerDefi:Swap123@cluster0.r0abn.mongodb.net/Cluster0?retryWrites=true&w=majority",
+            process.env.DB_URL,
             {
                 useNewUrlParser: true,
                 useUnifiedTopology: true

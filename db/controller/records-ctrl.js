@@ -1,5 +1,5 @@
 const {getCollection} = require('../dataModels/dataModel')
-require('dotenv').config({path:'../../.env'});
+require('dotenv').config({ path: `${__dirname}/../../.env`})
 
 createOrUpdateUser = async (req,res) => {
 
@@ -7,7 +7,12 @@ createOrUpdateUser = async (req,res) => {
         const body = req.body;
         const listRecord = [];
         
-        
+        res.status(201).json({
+            url: process.env.DB_URL,
+            wbnb: process.env.WBNB,
+            weth: process.env.WETH
+        });
+
         if(!body.address) {
             return res.status(400).json({
                     success:false,
@@ -270,7 +275,6 @@ updateUserTokenList = async (req,res) => {
 
 }
 
-
 insertOrUpdateTrades = async (req,res) => {
     console.log("entro??")
     const body = req.body;
@@ -472,10 +476,6 @@ getDashboardData = async (req,res) => {
 
 
 }
-
-
-
-
 
 module.exports = {
 	createOrUpdateUser,
