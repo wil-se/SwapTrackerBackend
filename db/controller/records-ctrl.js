@@ -1,3 +1,6 @@
+require('dotenv').config({ path: `${__dirname}/../../.env`})
+
+
 const {getCollection} = require('../dataModels/dataModel')
 const BigNumber = require('bignumber.js')
 

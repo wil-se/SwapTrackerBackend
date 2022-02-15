@@ -1,5 +1,5 @@
 const {MongoClient} = require('mongodb')
-
+require('dotenv').config({ path: `${__dirname}/../.env`})
 
 const connectMongodb = async () =>{
  
