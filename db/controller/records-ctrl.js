@@ -6,19 +6,22 @@ const BigNumber = require('bignumber.js')
 getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
     try{
-    await collection.find({}).toArray((err, records) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }   
-        if (!records.length) {
-            return res 
-                .status(404)
-                .json({ success: false, error: "record not found" })
-        }   
-        return res.status(201).json({ success: true, data: records })
-    });
+        await collection.find({}).toArray((err, records) => {
+            if (err) {
+                return res.status(400).json({ success: false, error: err })
+            }   
+            if (!records.length) {
+                return res 
+                    .status(404)
+                    .json({ success: false, error: "record not found" })
+            }   
+            return res.status(201).json({ success: true, data: records })
+        });
     }catch(err){
-        return res.status(201).json({ error: err });
+        return res.status(201).json({ 
+            err,
+            message: 'Datbase error'
+        });
     }
 }
 
@@ -443,70 +446,51 @@ getDashboardData = async (req,res) => {
             error:'body mancante',
         })
     }
-    let address = body.address && body.address.toLowerCase();
-    const collection = await getCollection('Trades');
-    console.log("vediamo l'account ", body.address)
-    const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
-    let openedTradesFormatted = []
-    let closedPlList = {}
 
-    let totalOpenTradesValue = 0;
+    try{
+        let address = body.address && body.address.toLowerCase();
+        const collection = await getCollection('Trades');
+        console.log("vediamo l'account ", body.address)
+        const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
+        let openedTradesFormatted = []
+        let closedPlList = {}
 
-    openedTrades.map((openedTrade)=> {
-        let amountOutMultiplyForPrice = openedTrade.amountOut * openedTrade.priceTo;
-        totalOpenTradesValue = totalOpenTradesValue += amountOutMultiplyForPrice; 
-    })
-    /*openedTrades?.map((openedTrade)=>{
-        closedTrades?.map((closedTrade)=>{
-            if(closedTrade.tokenTo !== openedTrade.tokenFrom){
-                uniqueOpenedTrades.push(openedTrade);
-            }
+        let totalOpenTradesValue = 0;
 
-        })
-    })
-
-    const calcPl = (trade) => {
-        let valueIn = trade?.amountIn * trade?.priceFrom;
-        let valueOut = trade?.amountOut * trade?.priceTo;
-        return valueOut - valueIn;
-    }
-    
-    closedTrades?.map((closedTrade)=>{
-        let dateTrade = new Date(closedTrade.timestamp);
-
-        if(!closedPlList[dateTrade.getDate()]){
-            closedPlList[dateTrade.getDate()] = calcPl(closedTrade) 
-
-        }
-        else{
-            closedPlList[dateTrade.getDate()] += calcPl(closedTrade) 
-        }
-
-    })*/
-
-    openedTrades.map((openedTrade)=>{
-        
-            openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
-            openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
-            openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
-            openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
-            openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
-            openedTrade.tokenFrom = openedTrade.tokenFrom
-            openedTrade.tokenTo = openedTrade.tokenTo
-            openedTradesFormatted.push(openedTrade)
-        
-    })
-
-    if(openedTradesFormatted.length>0){
-        console.log("entro qui??")
-        return res.status(201).json({
-            created:true,
-            data: {   
-                openedTrades:openedTradesFormatted,
-                totalOpenTradesValue:totalOpenTradesValue
-            }
+        openedTrades.map((openedTrade)=> {
+            let amountOutMultiplyForPrice = openedTrade.amountOut * openedTrade.priceTo;
+            totalOpenTradesValue = totalOpenTradesValue += amountOutMultiplyForPrice; 
         })
 
+        openedTrades.map((openedTrade)=>{
+            
+                openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
+                openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
+                openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
+                openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
+                openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
+                openedTrade.tokenFrom = openedTrade.tokenFrom
+                openedTrade.tokenTo = openedTrade.tokenTo
+                openedTradesFormatted.push(openedTrade)
+            
+        })
+
+        if(openedTradesFormatted.length>0){
+            console.log("entro qui??")
+            return res.status(201).json({
+                created:true,
+                data: {   
+                    openedTrades:openedTradesFormatted,
+                    totalOpenTradesValue:totalOpenTradesValue
+                }
+            })
+
+        }
+    }catch(err){
+        res.status(400).json({
+            err,
+            message: 'Database error'
+        });
     }
 
 
