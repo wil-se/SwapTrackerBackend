@@ -13,9 +13,9 @@ createOrUpdateUser = async (req,res) => {
                     error:'body mancante',
                 })
         }
-        res.status(201).json({response: body});
 
         const collection = await getCollection('Users');
+        res.status(201).json({response: body});
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                             { $set: { lastLogin: body.lastLogin } })
         if(userFinded.value){
