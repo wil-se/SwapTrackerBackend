@@ -6,12 +6,6 @@ createOrUpdateUser = async (req,res) => {
     try{
         const body = req.body;
         const listRecord = [];
-        
-        res.status(201).json({
-            url: process.env.DB_URL,
-            wbnb: process.env.WBNB,
-            weth: process.env.WETH
-        });
 
         if(!body.address) {
             return res.status(400).json({
