@@ -484,7 +484,7 @@ getDashboardData = async (req,res) => {
         })
 
         if(openedTradesFormatted.length>0){
-            console.log("entro qui??")
+            console.log("getDashBoardData(): openedTradesFormatted.length > 0");
             return res.status(200).json({
                 created:true,
                 data: {   
