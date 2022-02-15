@@ -6,7 +6,6 @@ createOrUpdateUser = async (req,res) => {
         const body = req.body;
         const listRecord = [];
         
-        res.status(201).json({response: body});
         
         if(!body.address) {
             return res.status(400).json({
@@ -14,6 +13,7 @@ createOrUpdateUser = async (req,res) => {
                     error:'body mancante',
                 })
         }
+        res.status(201).json({response: body});
 
         const collection = await getCollection('Users');
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
