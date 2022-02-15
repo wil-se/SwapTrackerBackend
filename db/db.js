@@ -7,7 +7,7 @@ let cachedDb = null;
 
 const connectMongodb = async () =>{
     
-    if (cachedDb && await mongoClient.isConnected()) {
+    if (cachedDb) {
         console.info("cached db connection established");
         return cachedDb;
     }
@@ -20,12 +20,9 @@ const connectMongodb = async () =>{
             useUnifiedTopology: true
         }).catch(error => console.log(error));
 
-        if ( ! (await mongoClient.isConnected())) {
-            console.error("Error : ", err);
-            throw new Error(`Unable to connect MongoDb Client, Reason: ${err}`);
-        }
         cachedDb = await client.db('Cluster0');
-        console.info("db connection established");
+        if(cachedDb)
+            console.info("db connection established");
         return cachedDb;
     }catch(err){
         console.log("Database error: %s", err);
