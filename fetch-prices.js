@@ -1,4 +1,6 @@
-require('dotenv').config()
+require('dotenv').config({
+	path: '/home/ubuntu/SwapTrackerBackend/.env'
+});
 const { MongoClient } = require('mongodb');
 const axios = require('axios').default;
 

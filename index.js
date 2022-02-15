@@ -1,27 +1,22 @@
 require('dotenv').config({
 	path: '/home/ubuntu/SwapTrackerBackend/.env'
 });
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 const express = require('express');
 const https = require('https');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 const recordsRouter = require('./db/routes/records-router');
 
-const PORT = 3333;
-const KEY = "/etc/letsencrypt/live/dev.swaptracker.io-0001/privkey.pem";
-const CERT = "/etc/letsencrypt/live/dev.swaptracker.io-0001/fullchain.pem"
+const PORT = 3000;
 
 console.log("init api")
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-	origin: '*'
-}));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -30,8 +25,4 @@ app.get('/', (req, res) => {
 })
 app.use('/data', recordsRouter)
 
-https.createServer({
-    key: fs.readFileSync(KEY),
-    cert: fs.readFileSync(CERT),
-    passphrase: 'swaptracker'
-}, app).listen(PORT);
+https.createServer(app).listen(PORT);
