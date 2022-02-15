@@ -4,7 +4,13 @@ const {MongoClient} = require('mongodb')
 const connectMongodb = async () =>{
     
     try{
-        const client = await MongoClient.connect(process.env.DB_URL,{useNewUrlParser: true,useUnifiedTopology: true});
+        const client = await MongoClient.connect(
+            "mongodb+srv://swaptrackerDefi:Swap123@cluster0.r0abn.mongodb.net/Cluster0?retryWrites=true&w=majority",
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+        );
         const db = await client.db('Cluster0');
         return db
     }catch(err){
