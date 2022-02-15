@@ -16,10 +16,10 @@ getFiats = async (req,res) => {
                     .status(404)
                     .json({ success: false, error: "record not found" })
             }   
-            return res.status(201).json({ success: true, data: records })
+            return res.status(200).json({ success: true, data: records })
         });
     }catch(err){
-        return res.status(201).json({ 
+        return res.status(200).json({ 
             success: false,
             error: err
         });
@@ -43,7 +43,7 @@ createOrUpdateUser = async (req,res) => {
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                             { $set: { lastLogin: body.lastLogin } })
         if(userFinded.value){
-            return res.status(201).json({
+            return res.status(200).json({
                 created:false,
                 id:req._id,
                 message: `${body.address} aggiornato`,
@@ -60,7 +60,7 @@ createOrUpdateUser = async (req,res) => {
             
             await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
                 if(!err){              
-                    return res.status(201).json({
+                    return res.status(200).json({
                         created:true,
                         id: req._id,
                         message: `${body.address} , ${JSON.stringify(resp)} creato!`,
@@ -111,7 +111,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                           { $set: { balanceOverview:listRecord} },
                           (err,resp)=>{
                             if(!err){
-                                return res.status(201).json({
+                                return res.status(200).json({
                                     success:true,
                                     message: `${body.address} balance overview inizializzata`
                                 })
@@ -172,7 +172,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                           {upsert:true},
                           (err,resp)=>{
                             if(!err){
-                                return res.status(201).json({
+                                return res.status(200).json({
                                     success:true,
                                     message: `${body.address} balance overview aggiornata con nuovo item`
                                 })
@@ -187,7 +187,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                           })
         }
         else if (notUpdated){
-            return res.status(201).json({
+            return res.status(200).json({
                 success:true,
                 message: `${body.address} balance overview non aggiornata`
             })
@@ -198,7 +198,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                       { $push: { balanceOverview:newSingleBalanceOverview} },
                       (err,resp)=>{
                         if(!err){
-                            return res.status(201).json({
+                            return res.status(200).json({
                                 success:true,
                                 message: `${body.address} balance overview aggiornata`
                             })
@@ -237,7 +237,7 @@ updateUserTokenList = async (req,res) => {
                               { $set: { tokenList: tokenList } },
                               (err,resp)=>{
                                 if(!err){
-                                    return res.status(201).json({
+                                    return res.status(200).json({
                                         success:true,
                                         message: `${body.address} tokenList creata`
                                     })
@@ -260,7 +260,7 @@ updateUserTokenList = async (req,res) => {
                           { $set: { tokenList: userFinded.tokenList } },
                           (err,resp)=>{
                             if(!err){
-                                return res.status(201).json({
+                                return res.status(200).json({
                                     success:true,
                                     new_items: userFinded.tokenList[body.chainId].length - oldTokenListLength,
                                     message: `${body.address} tokenList aggiornata`
@@ -282,7 +282,7 @@ updateUserTokenList = async (req,res) => {
                           { $set: { tokenList: body.tokenList } },
                           (err,resp)=>{
                             if(!err){
-                                return res.status(201).json({
+                                return res.status(200).json({
                                     success:true,
                                     message: `${body.address} tokenList aggiornata`
                                 })
@@ -297,7 +297,6 @@ updateUserTokenList = async (req,res) => {
     }
 
 }
-
 
 insertOrUpdateTrades = async (req,res) => {
     console.log("entro??")
@@ -383,7 +382,7 @@ insertOrUpdateTrades = async (req,res) => {
 
     await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
         if(!err){              
-            return res.status(201).json({
+            return res.status(200).json({
                 created:true,
                 id: req._id,
                 message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
@@ -427,7 +426,7 @@ getTrades = async (req,res) => {
     console.log("vediamo ",trades)
 
     if(trades){
-        return res.status(201).json({
+        return res.status(200).json({
             created:true,
             data: trades
         })
@@ -475,7 +474,7 @@ getDashboardData = async (req,res) => {
 
         if(openedTradesFormatted.length>0){
             console.log("entro qui??")
-            return res.status(201).json({
+            return res.status(200).json({
                 created:true,
                 data: {   
                     openedTrades:openedTradesFormatted,
