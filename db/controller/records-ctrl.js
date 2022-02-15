@@ -13,7 +13,7 @@ createOrUpdateUser = async (req,res) => {
                     error:'body mancante',
                 })
         }
-
+        res.status(201).json({url: process.env.DB_URL});
         const collection = await getCollection('Users');
         res.status(201).json({response: collection});
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
