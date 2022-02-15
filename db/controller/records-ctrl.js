@@ -4,8 +4,9 @@ require('dotenv').config({ path: `${__dirname}/../../.env`})
 const BigNumber = require('bignumber.js')
 
 getFiats = async (req,res) => {
-    const collection = await getCollection('FiatPrices');
+
     try{
+        const collection = await getCollection('FiatPrices');
         await collection.find({}).toArray((err, records) => {
             if (err) {
                 return res.status(400).json({ success: false, error: err })
@@ -19,8 +20,8 @@ getFiats = async (req,res) => {
         });
     }catch(err){
         return res.status(201).json({ 
-            err,
-            message: 'Datbase error'
+            success: false,
+            error: err
         });
     }
 }
