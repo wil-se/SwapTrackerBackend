@@ -14,7 +14,6 @@ createOrUpdateUser = async (req,res) => {
                 })
         }
         const collection = await getCollection('Users');
-        const userCheck = await collection.find({address:body.address})
         const userFinded = await collection.findOneAndUpdate({ address: body.address },
                                             { $set: { lastLogin: body.lastLogin } })
         if(userFinded.value){
@@ -44,7 +43,7 @@ createOrUpdateUser = async (req,res) => {
                 }
                 else{
                     return res.status(400).json({
-                        err,
+                        err: err,
                         message: `${body.address} non creato!`,
                     })
         
