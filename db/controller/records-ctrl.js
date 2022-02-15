@@ -5,7 +5,7 @@ const BigNumber = require('bignumber.js')
 
 getFiats = async (req,res) => {
     const collection = await getCollection('FiatPrices');
-    const data = await collection.find({}).toArray((err, records) => {
+    await collection.find({}).toArray((err, records) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }   
