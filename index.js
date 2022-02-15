@@ -12,7 +12,7 @@ console.log("init api")
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({
