@@ -95,109 +95,118 @@ createOrUpdateBalanceOverview = async (req,res) => {
 				error:'body mancante',
 			})
 	}
-    const collection = await getCollection('Users');
-    const userFinded = await collection.findOne({address:body.address})
     
+    let collection;
+    let userFinded;
+    try{
+        collection = await getCollection('Users');
+        userFinded = await collection.findOne({address:body.address});
+    }catch(err){
+        console.log("createOrUpdateBalanceOverview(): DB Error: %s", err);
+        res.status(400).json({
+            error: err,
+            success: false
+        });
+    }
+    
+
     if(!userFinded.balanceOverview){
-        let singleBalanceOverview = body.singleBalanceOverview
-        let newKey = new Date(Object.keys(singleBalanceOverview))
+
+        try{
+            let singleBalanceOverview = body.singleBalanceOverview
+            let newKey = new Date(Object.keys(singleBalanceOverview))
+            
+            singleBalanceOverview = { [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)] }
+            console.log("createOrUpdateBalanceOverview(): singleBalanceOverview ", singleBalanceOverview)
+            listRecord.push(singleBalanceOverview)
+            await collection
+            .findOneAndUpdate( { address: body.address }, { $set: { balanceOverview:listRecord} },
+                (err,resp)=>{
+                    if(!err){
+                        return res.status(200).json({
+                            success:true,
+                            message: `${body.address} balance overview inizializzata`
+                        })
+                    }else {
+                        return res.status(400).json({
+                            success:false,
+                            message: `${body.address} ${err}`
+                        }) 
+                    }
+                }
+            );
+        }catch(err){
+            console.log("createOrUpdateBalanceOverview(): Initialize balance overview failed: %s", err);
+            res.status(400).json({
+                error: err,
+                success: false
+            });
+        }
         
-        singleBalanceOverview = {
-                                    [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)]
-                                }
-        console.log("vediamo questo nuovo item di balance overview ", singleBalanceOverview)
-        listRecord.push(singleBalanceOverview)
-        await collection
-        .findOneAndUpdate({ address: body.address },
-                          { $set: { balanceOverview:listRecord} },
-                          (err,resp)=>{
-                            if(!err){
-                                return res.status(200).json({
-                                    success:true,
-                                    message: `${body.address} balance overview inizializzata`
-                                })
-                            }
-                            else {
-                                return res.status(400).json({
-                                    success:false,
-                                    message: `${body.address} ${err}`
-                                }) 
-                            }
-                          })
     }
     else {
-        let oldBalanceOverview;
-        let newSingleBalanceOverview = body.singleBalanceOverview
-        let newKey = new Date(Object.keys(newSingleBalanceOverview))
-        let notUpdated = false
-        newSingleBalanceOverview = {
-                                    [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)]
-                                }
-        console.log("vediamo questo item aggiornato di balance overview ", newSingleBalanceOverview)
-        let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
-        userFinded.balanceOverview?.map((oldSingleBalanceOverview)=>{
-            let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
-            console.log("vediamo queste key ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
-            if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
-                console.log("ma alla fine entro??",oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
-                oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)] 
-                === 
-                newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? 
-                (notUpdated = true)
-                :
 
-                (
-                    oldBalanceOverview = oldSingleBalanceOverview
-                );
-                console.log("vediamo questo oggetto", oldBalanceOverview)
-                
-                
-            }
-           
-            console.log("vediamo l'oggetto ora" , oldBalanceOverview)
-        })
+        try{
 
-        if(oldBalanceOverview) {
-            let objectToUpdate = {}
-            let queryFilter = {}
-            let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
-            let keyforFilter = "balanceOverview."+ Object.keys(newSingleBalanceOverview)[0];
-            objectToUpdate[keyforDb] = Object.values(newSingleBalanceOverview)[0];
-            queryFilter["address"] = body.address;
-            queryFilter[keyforFilter] = Object.values(oldBalanceOverview)[0];
-
-            console.log("vediamo questi filtri ", queryFilter,objectToUpdate)
-            await collection
-                .findOneAndUpdate(queryFilter,
-                          { $set: objectToUpdate },
-                          {upsert:true},
-                          (err,resp)=>{
-                            if(!err){
-                                return res.status(200).json({
-                                    success:true,
-                                    message: `${body.address} balance overview aggiornata con nuovo item`
-                                })
-                            }
-                            else {
-                                console.log(err)
-                                return res.status(400).json({
-                                    success:false,
-                                    message: `${body.address} ${err}`
-                                }) 
-                            }
-                          })
-        }
-        else if (notUpdated){
-            return res.status(200).json({
-                success:true,
-                message: `${body.address} balance overview non aggiornata`
+            let oldBalanceOverview;
+            let newSingleBalanceOverview = body.singleBalanceOverview
+            let newKey = new Date(Object.keys(newSingleBalanceOverview))
+            let notUpdated = false
+            newSingleBalanceOverview = { [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] }
+            console.log("createOrUpdateBalanceOverview(): newSingleBalanceOverview", newSingleBalanceOverview)
+            let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
+            userFinded.balanceOverview?.map((oldSingleBalanceOverview)=>{
+                let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
+                console.log("createOrUpdateBalanceOverview(): Keys of oldKeySingleBalanceOverview, newKeySingleBalanceOverview ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
+                if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
+                    console.log("oldKeySingleBalanceOverview === newKeySingleBalanceOverview", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
+                    oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
+                    console.log("oldBalanceOverview", oldBalanceOverview)
+                    
+                    
+                }
+            
+                console.log("createOrUpdateBalanceOverview(): oldBalanceOverview" , oldBalanceOverview)
             })
-        }
-        else {
-            collection
-            .findOneAndUpdate({ address: body.address },
-                      { $push: { balanceOverview:newSingleBalanceOverview} },
-                      (err,resp)=>{
+
+            if(oldBalanceOverview) {
+                let objectToUpdate = {}
+                let queryFilter = {}
+                let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
+                let keyforFilter = "balanceOverview."+ Object.keys(newSingleBalanceOverview)[0];
+                objectToUpdate[keyforDb] = Object.values(newSingleBalanceOverview)[0];
+                queryFilter["address"] = body.address;
+                queryFilter[keyforFilter] = Object.values(oldBalanceOverview)[0];
+
+                console.log("createOrUpdateBalanceOverview(): queryFilter, objectToUpdate ", queryFilter,objectToUpdate)
+                await collection
+                    .findOneAndUpdate(queryFilter, { $set: objectToUpdate }, {upsert:true},
+                    (err,resp)=>{
+                        if(!err){
+                            return res.status(200).json({
+                                success:true,
+                                message: `${body.address} balance overview aggiornata con nuovo item`
+                            })
+                        }
+                        else {
+                            console.log(err)
+                            return res.status(400).json({
+                                success:false,
+                                message: `${body.address} ${err}`
+                            }) 
+                        }
+                    })
+            }
+            else if (notUpdated){
+                return res.status(200).json({
+                    success:true,
+                    message: `${body.address} balance overview non aggiornata`
+                })
+            }
+            else {
+                collection
+                    .findOneAndUpdate({ address: body.address }, { $push: { balanceOverview:newSingleBalanceOverview} },
+                    (err,resp)=>{
                         if(!err){
                             return res.status(200).json({
                                 success:true,
@@ -210,7 +219,14 @@ createOrUpdateBalanceOverview = async (req,res) => {
                                 message: `${body.address} ${err}`
                             }) 
                         }
-                      })
+                    })
+            }
+        }catch(err){
+            console.log("CreateOrUpdateBalanceOverview(): Permutation failed: %s", err);
+            res.status(400).json({
+                error: err,
+                success: false
+            });
         }
     }
 }
@@ -461,16 +477,14 @@ getDashboardData = async (req,res) => {
         })
 
         openedTrades.map((openedTrade)=>{
-            
-                openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
-                openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
-                openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
-                openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
-                openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
-                openedTrade.tokenFrom = openedTrade.tokenFrom
-                openedTrade.tokenTo = openedTrade.tokenTo
-                openedTradesFormatted.push(openedTrade)
-            
+            openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
+            openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
+            openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
+            openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
+            openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
+            openedTrade.tokenFrom = openedTrade.tokenFrom
+            openedTrade.tokenTo = openedTrade.tokenTo
+            openedTradesFormatted.push(openedTrade)
         })
 
         if(openedTradesFormatted.length>0){
