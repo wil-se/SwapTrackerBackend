@@ -2,12 +2,12 @@ require('dotenv').config({ path: `${__dirname}/../.env`})
 
 const {MongoClient} = require('mongodb')
 
-let mongoClient = null;
-let cachedDb = null;
+var mongoClient = null;
+var cachedDb = null;
 
 const connectMongodb = async () =>{
     
-    if (cachedDb) {
+    if (cachedDb && mongoClient) {
         console.info("A DB instance is already available, avoiding new connection.");
         return cachedDb;
     }
