@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 const recordsRouter = require('./db/routes/records-router');
 
-const PORT = 3333;
+const PORT = 3000;
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,4 +22,4 @@ app.get('/', (req, res) => {
 })
 app.use('/data', recordsRouter)
 
-http.createServer(app, 'localhost').listen(PORT);
+http.createServer(app).listen(PORT);
