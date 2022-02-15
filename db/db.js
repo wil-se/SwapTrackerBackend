@@ -8,10 +8,9 @@ let cachedDb = null;
 const connectMongodb = async () =>{
     
     if (cachedDb) {
-        console.info("cached db connection established");
+        console.info("A DB instance is already available, avoiding new connection.");
         return cachedDb;
     }
-
 
     try{
 
