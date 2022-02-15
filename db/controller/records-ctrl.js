@@ -1,4 +1,5 @@
 const {getCollection} = require('../dataModels/dataModel')
+require('dotenv').config({path:'../../.env'});
 
 createOrUpdateUser = async (req,res) => {
 
