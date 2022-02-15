@@ -12,23 +12,18 @@ const connectMongodb = async () =>{
         return cachedDb;
     }
 
-    mongoClient = new MongoClient(process.env.DB_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        poolSize: 10
-    });
 
     try{
-        await mongoClient.connect();
+
+        mongoClient = await MongoClient(process.env.DB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            poolSize: 10
+        }).connect();
 
         if ( ! (await mongoClient.isConnected())) {
-            await mongoClient.connect(err => {
-              if (err) {
-                console.error("Error : ", err);
-                throw new Error(`Unable to connect MongoDb Client, Reason: ${err}`
-                );
-              }
-            });
+            console.error("Error : ", err);
+            throw new Error(`Unable to connect MongoDb Client, Reason: ${err}`);
         }
         cachedDb = await client.db('Cluster0');
         console.info("db connection established");
