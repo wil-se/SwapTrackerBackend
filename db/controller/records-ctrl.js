@@ -161,11 +161,11 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
                     console.log("createOrUpdateBalanceOverview(): oldKeySingleBalanceOverview === newKeySingleBalanceOverview | ", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
                     oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)[0]]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)[0]] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
-                    console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
                 }
             })
 
             if(oldBalanceOverview) {
+                console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
                 let objectToUpdate = {}
                 let queryFilter = {}
                 let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
