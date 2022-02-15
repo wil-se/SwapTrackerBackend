@@ -15,11 +15,11 @@ const connectMongodb = async () =>{
 
     try{
 
-        mongoClient = await MongoClient(process.env.DB_URL, {
+        mongoClient = await MongoClient.connect(process.env.DB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             poolSize: 10
-        }).connect();
+        }).catch(error => console.log(error));
 
         if ( ! (await mongoClient.isConnected())) {
             console.error("Error : ", err);
@@ -30,6 +30,7 @@ const connectMongodb = async () =>{
         return cachedDb;
     }catch(err){
         console.log("Database error: %s", err);
+        return err;
     }
 }
 
