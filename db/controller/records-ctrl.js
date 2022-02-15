@@ -459,6 +459,7 @@ getDashboardData = async (req,res) => {
 
     try{
         let address = body.address && body.address.toLowerCase();
+        console.log('getDashBoardData(): address: %s', address);
         const collection = await getCollection('Trades');
         console.log("vediamo l'account ", body.address)
         const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
