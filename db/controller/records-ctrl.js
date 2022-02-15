@@ -35,43 +35,51 @@ createOrUpdateUser = async (req,res) => {
 				error:'body mancante',
 			})
 	}
-	const collection = await getCollection('Users');
-    const userCheck = await collection.find({address:body.address})
-    const userFinded = await collection.findOneAndUpdate({ address: body.address },
-                                        { $set: { lastLogin: body.lastLogin } })
-    if(userFinded.value){
-        return res.status(201).json({
-            created:false,
-            id:req._id,
-            message: `${body.address} aggiornato`,
-            data: userFinded.value
-        })
-    }
-    else{
-        body.tokenList = {
-            1:[process.env.WETH.toLowerCase()],
-            56:[process.env.WBNB.toLowerCase(),process.env.BUSD.toLowerCase(),process.env.USDT.toLowerCase(),process.env.SWPT.toLowerCase()]
+
+    try{
+        const collection = await getCollection('Users');
+        const userCheck = await collection.find({address:body.address})
+        const userFinded = await collection.findOneAndUpdate({ address: body.address },
+                                            { $set: { lastLogin: body.lastLogin } })
+        if(userFinded.value){
+            return res.status(201).json({
+                created:false,
+                id:req._id,
+                message: `${body.address} aggiornato`,
+                data: userFinded.value
+            })
         }
-        body.address = body.address.toLowerCase()
-        listRecord.push(body);
+        else{
+            body.tokenList = {
+                1:[process.env.WETH.toLowerCase()],
+                56:[process.env.WBNB.toLowerCase(),process.env.BUSD.toLowerCase(),process.env.USDT.toLowerCase(),process.env.SWPT.toLowerCase()]
+            }
+            body.address = body.address.toLowerCase()
+            listRecord.push(body);
+            
+            await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
+                if(!err){              
+                    return res.status(201).json({
+                        created:true,
+                        id: req._id,
+                        message: `${body.address} , ${JSON.stringify(resp)} creato!`,
+                        data: body
+                    })
+                }
+                else{
+                    return res.status(400).json({
+                        err,
+                        message: `${body.address} non creato!`,
+                    })
         
-        await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
-            if(!err){              
-                return res.status(201).json({
-                    created:true,
-                    id: req._id,
-                    message: `${body.address} , ${JSON.stringify(resp)} creato!`,
-                    data: body
-                })
-            }
-            else{
-                return res.status(400).json({
-                    err,
-                    message: `${body.address} non creato!`,
-                })
-    
-            }
-        })		
+                }
+            })		
+        }
+    }catch(err) {
+        return res.status(400).json({
+            err,
+            message: `Database error`,
+        });
     }
 	
 }
