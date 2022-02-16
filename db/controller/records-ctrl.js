@@ -424,7 +424,7 @@ insertOrUpdateTrades = async (req,res) => {
 
 getTrades = async (req,res) => {
     const body = req.body;
-
+    const tradesFormatted = []
     if(!body) {
 		return res.status(400).json({
 				success:false,
@@ -436,12 +436,22 @@ getTrades = async (req,res) => {
 
     const trades = await collection.find({user:body.address}).toArray();
 
-    console.log("vediamo ",trades)
+    trades.map((trade)=>{
+        trade.amountIn = new BigNumber(trade.amountIn).toNumber().toFixed(5)
+        openedTrade.openAt = (trade.amountOut * trade.priceTo).toFixed(3)
+        openedTrade.priceTo = Number(trade.priceTo).toFixed(3)
+        openedTrade.pl = new BigNumber(Number(trade.currentValue)).minus(Number(trade.openAt)).toNumber() 
+        openedTrade.pl_perc = ((Number(trade.currentValue) - Number(trade.openAt))/Number(trade.openAt)*100).toFixed(2)
+        openedTrade.tokenFrom = trade.tokenFrom
+        openedTrade.tokenTo = trade.tokenTo
+        tradesFormatted.push(trade)
+    })
 
-    if(trades){
+
+    if(tradesFormatted.length >0){
         return res.status(200).json({
             created:true,
-            data: trades
+            data: tradesFormatted
         })
     } 
 
