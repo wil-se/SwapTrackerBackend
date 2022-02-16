@@ -438,12 +438,10 @@ getTrades = async (req,res) => {
 
     trades.map((trade)=>{
         trade.amountIn = new BigNumber(trade.amountIn).toNumber().toFixed(5)
-        openedTrade.openAt = (trade.amountOut * trade.priceTo).toFixed(3)
-        openedTrade.priceTo = Number(trade.priceTo).toFixed(3)
-        openedTrade.pl = new BigNumber(Number(trade.currentValue)).minus(Number(trade.openAt)).toNumber() 
-        openedTrade.pl_perc = ((Number(trade.currentValue) - Number(trade.openAt))/Number(trade.openAt)*100).toFixed(2)
-        openedTrade.tokenFrom = trade.tokenFrom
-        openedTrade.tokenTo = trade.tokenTo
+        trade.openAt = (trade.amountOut * trade.priceTo).toFixed(3)
+        trade.priceTo = Number(trade.priceTo).toFixed(3)
+        trade.tokenFrom = trade.tokenFrom
+        trade.tokenTo = trade.tokenTo
         tradesFormatted.push(trade)
     })
 
