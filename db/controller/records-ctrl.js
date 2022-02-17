@@ -469,7 +469,6 @@ getDashboardData = async (req,res) => {
         let address = body.address && body.address.toLowerCase();
         console.log('getDashBoardData(): address: %s', address);
         const collection = await getCollection('Trades');
-        console.log("vediamo l'account ", body.address)
         const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
         let openedTradesFormatted = []
         let closedPlList = {}
@@ -482,11 +481,11 @@ getDashboardData = async (req,res) => {
         })
 
         openedTrades.map((openedTrade)=>{
-            openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber().toFixed(5)
-            openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo).toFixed(3)
-            openedTrade.priceTo = Number(openedTrade.priceTo).toFixed(3)
+            openedTrade.amountIn = new BigNumber(openedTrade.amountIn).toNumber()
+            openedTrade.openAt = (openedTrade.amountOut * openedTrade.priceTo)
+            openedTrade.priceTo = Number(openedTrade.priceTo)
             openedTrade.pl = new BigNumber(Number(openedTrade.currentValue)).minus(Number(openedTrade.openAt)).toNumber() 
-            openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100).toFixed(2)
+            openedTrade.pl_perc = ((Number(openedTrade.currentValue) - Number(openedTrade.openAt))/Number(openedTrade.openAt)*100)
             openedTrade.tokenFrom = openedTrade.tokenFrom
             openedTrade.tokenTo = openedTrade.tokenTo
             openedTradesFormatted.push(openedTrade)
