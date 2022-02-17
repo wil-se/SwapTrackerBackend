@@ -437,9 +437,9 @@ getTrades = async (req,res) => {
     const trades = await collection.find({user:body.address}).toArray();
 
     trades.map((trade)=>{
-        trade.amountIn = new BigNumber(trade.amountIn).toNumber().toFixed(5)
-        trade.openAt = (trade.amountOut * trade.priceTo).toFixed(3)
-        trade.priceTo = Number(trade.priceTo).toFixed(3)
+        trade.amountIn = new BigNumber(trade.amountIn).toNumber()
+        trade.openAt = (trade.amountOut * trade.priceTo)
+        trade.priceTo = Number(trade.priceTo)
         trade.tokenFrom = trade.tokenFrom
         trade.tokenTo = trade.tokenTo
         tradesFormatted.push(trade)
