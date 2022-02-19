@@ -594,14 +594,20 @@ getProfitsLoss = async (req,res) => {
             }
         });
 
+        let asArray = Object.entries(finalResult);
+        for(let j = 1; j < asArray.length; j++) {
+            asArray[j][1] += asArray[j-1][1]
+        }
+
+        let parsed = asArray.map(el => {
+            return {
+                [el[0]]: el[1]
+            }
+        });
 
         return res.status(200).json({
             success: true,
-            data: Object.entries(finalResult).map(el => {
-                return {
-                    [el[0]]: el[1]
-                }
-            })
+            data: parsed
         });
 
     }catch(err) {
