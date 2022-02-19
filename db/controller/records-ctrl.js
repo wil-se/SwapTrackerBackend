@@ -557,6 +557,8 @@ getProfitsLoss = async (req,res) => {
         if(n_days === 0)
             n_days = 1;
         
+        console.log(n_days);
+        
         if(! (pls.length > 0)){
             return res.status(200).json({
                 success:true,
@@ -583,8 +585,6 @@ getProfitsLoss = async (req,res) => {
             let d = date.format('YYYY/MM/DD');
             dates.push(d);
         }
-
-        console.log(dates);
 
         let finalResult = {};
         dates.reverse().forEach(date => {
