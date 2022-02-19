@@ -559,17 +559,20 @@ getProfitsLoss = async (req,res) => {
             pls_formatted.set(k, pl_item.profitLoss);
         }
     })
-    let pls_obj = Object.fromEntries(pls_formatted);
 
+    let pls_obj = Object.fromEntries(pls_formatted);
     let dates = [];
 
     for (let i = 0; i < n_days; i++) {
         let date = moment();
         date.subtract(i, 'day');
-        dates.push(date.format('YYYY/MM/DD'));
+        let d = date.format('YYYY/MM/DD');
+        console.log(d);
+        dates.push(d);
     }
 
     let finalResult = {};
+    console.log(dates);
     dates.reverse().forEach(date => {
         if(!pls_obj.hasOwnProperty(date)) {
             finalResult[date] = 0;
