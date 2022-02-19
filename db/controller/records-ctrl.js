@@ -521,6 +521,10 @@ getDashboardData = async (req,res) => {
 
 getProfitsLoss = async (req,res) => {
 
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
+
     const queryObject = url.parse(req.url, true).query;
     //console.log(queryObject);
 
@@ -555,7 +559,7 @@ getProfitsLoss = async (req,res) => {
 
     let pls_formatted = new Map();
     pls.forEach((pl_item) => {
-        let k = new Date(pl_item.date).toISOString().split('T')[0].replaceAll('-','/');
+        let k = replaceAll(new Date(pl_item.date).toISOString().split('T')[0], '-', '/');
         if(pls_formatted.has(k)){
             pls_formatted.set(k, pls_formatted.get(k) + pl_item.profitLoss );
         }else{
