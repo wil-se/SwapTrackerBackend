@@ -553,7 +553,7 @@ getProfitsLoss = async (req,res) => {
     if(pls_formatted.size > 0){
         return res.status(200).json({
             success: true,
-            data: pls_formatted.toArray()
+            data: [...pls_formatted]
         })
     }
 
