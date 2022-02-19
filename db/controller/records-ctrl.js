@@ -529,7 +529,7 @@ getProfitsLoss = async (req,res) => {
 			})
 	}
 
-    const user = queryObject.address.toLowerCase();
+    const user = queryObject.user.toLowerCase();
 
     const collection = await getCollection('TradeProfits');
     const pls = await collection.find({user:user}).toArray();
