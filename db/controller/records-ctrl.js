@@ -542,6 +542,7 @@ getProfitsLoss = async (req,res) => {
             return new Date(a.date) - new Date(b.date);
         });
 
+
         let start_date = moment(pls[0].date);
         let end_date = moment();
         let n_days = start_date.diff(end_date, 'days');
@@ -588,11 +589,13 @@ getProfitsLoss = async (req,res) => {
 
         return res.status(200).json({
             success: true,
-            data: Object.entries(finalResult).reduce((acc, val) => {
-                const [key, value] = val;
-                acc[key] = value;
-                return acc;
-            }, {})
+            data: Object.entries(finalResult).map(el => {
+                return el.reduce((acc, val) => {
+                    const [key, value] = val;
+                    acc[key] = value;
+                    return acc;
+                }, {})
+            })
         })
     }catch(err) {
         console.log(err);
