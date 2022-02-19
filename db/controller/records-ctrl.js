@@ -589,7 +589,11 @@ getProfitsLoss = async (req,res) => {
 
         return res.status(200).json({
             success: true,
-            data: Object.entries(finalResult).map(el => Object.from(el))
+            data: Object.entries(finalResult).map(el => {
+                let obj = {};
+                obj[el[0]] = el[1];
+                return obj;
+            })
         });
 
     }catch(err) {
