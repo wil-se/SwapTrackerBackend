@@ -548,7 +548,6 @@ getProfitsLoss = async (req,res) => {
         }else{
             pls_formatted.set(k, pl_item.profitLoss);
         }
-        return obj;
     })
 
     if(pls_formatted.size > 0){
