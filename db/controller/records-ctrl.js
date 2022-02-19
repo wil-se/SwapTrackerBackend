@@ -586,12 +586,11 @@ getProfitsLoss = async (req,res) => {
         }
     });
 
-    console.log(pls_obj);
     console.log(finalResult);
 
     return res.status(200).json({
         success: true,
-        data: finalResult
+        data: Object.entries(finalResult)
     })
 
 }
