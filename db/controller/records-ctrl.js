@@ -312,12 +312,11 @@ updateUserTokenList = async (req,res) => {
 }
 
 insertOrUpdateTrades = async (req,res) => {
-    console.log("entro??")
+
     const body = req.body;
     body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
     body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
     body.user = body.user && body.user.toLowerCase()
-    console.log("vediamo adesso il body tutto lower case")
 	const listRecord = [];
 	listRecord.push(body);
 
@@ -328,44 +327,48 @@ insertOrUpdateTrades = async (req,res) => {
 			})
 	}
 	const collection = await getCollection('Trades');
-
     const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
+    let now = new Date();
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
-    const closeTrade = async ()=>{
+    const closeTrade = (pl = 0) => {
             
-            console.log("vediamo... ", tradeFindendInBuyLocal)
-            let sellTrade = body;
-            tradeFindendInBuyLocal.map(async (buyTrade)=>{
-                
-                console.log(Number(sellTrade.amountIn) > Number(buyTrade.amountOut), sellTrade.amountIn , buyTrade.amountOut, )
-                
-                    if(Number(sellTrade.amountIn) > Number(buyTrade.amountOut) && buyTrade.status !== 100){
-                        console.log("entro nell'if")
-                        buyTrade.status = 100;
-                        buyTrade.closedDate = new Date();
-                         await closeTrade()                                   
-                        
-                    } 
-                    else {
-                        buyTrade.status = buyTrade.status += ((sellTrade.amountIn/buyTrade.amountOut)*100);
-                        if(buyTrade.status > 98.8){buyTrade.status = 100; buyTrade.closedDate = new Date();}
-                        console.log("entro nell else")
-                        return;
-                    }
-                
-            })
+        let sellTrade = body;
 
+        tradeFindendInBuyLocal.forEach( (buyTrade)=>{
+             
+            if(Number(sellTrade.amountIn) > Number(buyTrade.amountOut) && buyTrade.status !== 100){
+                buyTrade.status = 100;
+                buyTrade.closedDate = now;
+                pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
+                trades.pop();
+                closeTrade(pl);
+            } else {
+                buyTrade.status = buyTrade.status += ((sellTrade.amountIn /buyTrade.amountOut ) * 100);
+                if(buyTrade.status > 98.8){
+                    buyTrade.status = 100;
+                    buyTrade.closedDate = now;
+                }
+                return pl;
+            }
+                
+        })
+    }
         
+    const logProfitLoss = async (profitLoss) => {
+        let coll = await getCollection('TradeProfits');
+        coll.insert({
+            user: body.user,
+            profitLoss: profitLoss,
+            date: now
+        });
     }
 
-    await closeTrade()
-
-    console.log("vediamo dopo ", tradeFindendInBuyLocal)
+    let pl = closeTrade(tradeFindendInBuyLocal)
+    logProfitLoss(pl)
         
-    tradeFindendInBuyLocal.map(async(tradeBuySelled,i)=>{
-        console.log("ma itera??", tradeBuySelled, i)
+    tradeFindendInBuyLocal.forEach( async(tradeBuySelled,i) => {
         if(tradeBuySelled.closedDate){
             await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
                 { $set: { status:tradeBuySelled.status, closedDate:tradeBuySelled.closedDate  } },
@@ -393,7 +396,7 @@ insertOrUpdateTrades = async (req,res) => {
         }
     })
 
-    await collection.insertMany(listRecord,{safe:true},(err,resp)=>{
+    await collection.insertMany(listRecord, {safe:true}, (err,resp) => {
         if(!err){              
             return res.status(200).json({
                 created:true,
@@ -411,15 +414,6 @@ insertOrUpdateTrades = async (req,res) => {
         }
     })		
 
-
-    
-
-    
-        
-    
-
-        
-    
 }
 
 getTrades = async (req,res) => {
@@ -511,10 +505,6 @@ getDashboardData = async (req,res) => {
 
 
 }
-
-
-
-
 
 module.exports = {
 	createOrUpdateUser,
