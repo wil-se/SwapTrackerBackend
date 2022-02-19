@@ -550,9 +550,6 @@ getProfitsLoss = async (req,res) => {
             return new Date(a.date) - new Date(b.date);
         });
 
-        console.log(pls);
-
-
         let start_date = moment(pls[0].date);
         let end_date = moment();
         let n_days = start_date.diff(end_date, 'days');
@@ -587,6 +584,8 @@ getProfitsLoss = async (req,res) => {
             dates.push(d);
         }
 
+        console.log(dates);
+
         let finalResult = {};
         dates.reverse().forEach(date => {
             if(!pls_obj.hasOwnProperty(date)) {
@@ -595,8 +594,8 @@ getProfitsLoss = async (req,res) => {
                 finalResult[date] = pls_obj[date];
             }
         });
+
         let asArray = Object.entries(finalResult);
-        console.log(asArray);
         if(asArray.length > 0){
             for(let j = 1; j < asArray.length; j++) {
                 asArray[j][1] = Number(asArray[j][1]) + Number(asArray[j-1][1])
