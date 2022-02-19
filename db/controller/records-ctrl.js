@@ -365,7 +365,7 @@ insertOrUpdateTrades = async (req,res) => {
         });
     }
 
-    let pl = closeTrade(tradeFindendInBuyLocal)
+    let pl = closeTrade()
     logProfitLoss(pl)
         
     tradeFindendInBuyLocal.forEach( async(tradeBuySelled,i) => {
