@@ -601,6 +601,7 @@ getProfitsLoss = async (req,res) => {
             }
 
         let parsed = asArray.map(el => {
+            console.log(el);
             return {
                 [el[0]]: el[1]
             }
