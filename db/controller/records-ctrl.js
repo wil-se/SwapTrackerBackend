@@ -566,7 +566,7 @@ getProfitsLoss = async (req,res) => {
     for (let i = 0; i < n_days; i++) {
         let date = moment();
         date.subtract(i, 'day');
-        dates.push(date.format('YYYY-MM-DD'));
+        dates.push(date.format('YYYY/MM/DD'));
     }
 
     let finalResult = {};
@@ -578,6 +578,7 @@ getProfitsLoss = async (req,res) => {
         }
     });
 
+    console.log(pls_obj);
     console.log(finalResult);
 
     return res.status(200).json({
