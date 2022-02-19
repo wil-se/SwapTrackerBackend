@@ -593,13 +593,13 @@ getProfitsLoss = async (req,res) => {
                 finalResult[date] = pls_obj[date];
             }
         });
-        console.log(finalResult);
         let asArray = Object.entries(finalResult);
         console.log(asArray);
-        if(asArray.length > 0)
+        if(asArray.length > 0){
             for(let j = 1; j < asArray.length; j++) {
-                asArray[j][1] += asArray[j-1][1]
+                asArray[j][1] = Number(asArray[j][1]) + Number(asArray[j-1][1])
             }
+        }
 
         let parsed = asArray.map(el => {
             return {
