@@ -238,7 +238,6 @@ updateUserTokenList = async (req,res) => {
 				error:'body mancante',
 			})
 	}
-    console.log("vediamo ",body.tokenList[body.chainId])
     let tokenList = body.tokenList[body.chainId].map((tokenAddress)=> {return tokenAddress.toLowerCase()})
     body.tokenList[body.chainId] = tokenList
 	const collection = await getCollection('Users');
@@ -343,7 +342,7 @@ insertOrUpdateTrades = async (req,res) => {
                 buyTrade.closedDate = now;
                 pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
                 console.log("PL: %s", pl);
-                closeTrade(pl);
+                return closeTrade(pl);
             } else {
                 buyTrade.status = buyTrade.status += ((sellTrade.amountIn /buyTrade.amountOut ) * 100);
                 if(buyTrade.status > 98.8){
