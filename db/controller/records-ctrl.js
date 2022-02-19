@@ -538,6 +538,14 @@ getProfitsLoss = async (req,res) => {
 
         const collection = await getCollection('TradeProfits');
         const pls = await collection.find({user:user}).toArray();
+
+        if(!pls || pls.length == 0){
+            return res.status(200).json({
+                success: true,
+                data: {}
+            });
+        }
+
         pls.sort(function(a,b){
             return new Date(a.date) - new Date(b.date);
         });
