@@ -119,7 +119,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
             let newKey = new Date(Object.keys(singleBalanceOverview))
             
             singleBalanceOverview = { [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:singleBalanceOverview[Object.keys(singleBalanceOverview)] }
-            console.log("createOrUpdateBalanceOverview(): singleBalanceOverview ", singleBalanceOverview)
+            //console.log("createOrUpdateBalanceOverview(): singleBalanceOverview ", singleBalanceOverview)
             listRecord.push(singleBalanceOverview)
             await collection
             .findOneAndUpdate( { address: body.address }, { $set: { balanceOverview:listRecord} },
@@ -155,19 +155,19 @@ createOrUpdateBalanceOverview = async (req,res) => {
             let newKey = new Date(Object.keys(newSingleBalanceOverview))
             let notUpdated = false
             newSingleBalanceOverview = { [`${newKey.getFullYear()}/${newKey.getMonth()+1}/${newKey.getDate()}`]:newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] }
-            console.log("createOrUpdateBalanceOverview(): newSingleBalanceOverview", newSingleBalanceOverview)
+            //console.log("createOrUpdateBalanceOverview(): newSingleBalanceOverview", newSingleBalanceOverview)
             let newKeySingleBalanceOverview = new Date(Object.keys(newSingleBalanceOverview)).getTime()                        
             userFinded.balanceOverview?.map((oldSingleBalanceOverview)=>{
                 let oldKeySingleBalanceOverview = new Date(Object.keys(oldSingleBalanceOverview)).getTime()
-                console.log("createOrUpdateBalanceOverview(): Keys of oldKeySingleBalanceOverview, newKeySingleBalanceOverview ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
+                //console.log("createOrUpdateBalanceOverview(): Keys of oldKeySingleBalanceOverview, newKeySingleBalanceOverview ",oldKeySingleBalanceOverview, newKeySingleBalanceOverview, Object.keys(oldSingleBalanceOverview), Object.keys(newSingleBalanceOverview))
                 if(oldKeySingleBalanceOverview === newKeySingleBalanceOverview){
-                    console.log("createOrUpdateBalanceOverview(): oldKeySingleBalanceOverview === newKeySingleBalanceOverview | ", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
+                    //console.log("createOrUpdateBalanceOverview(): oldKeySingleBalanceOverview === newKeySingleBalanceOverview | ", oldKeySingleBalanceOverview, oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)], newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] )
                     oldSingleBalanceOverview[Object.keys(oldSingleBalanceOverview)]  ===  newSingleBalanceOverview[Object.keys(newSingleBalanceOverview)] ? (notUpdated = true) : (oldBalanceOverview = oldSingleBalanceOverview)
                 }
             })
 
             if(oldBalanceOverview) {
-                console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
+                //console.log("createOrUpdateBalanceOverview(): oldBalanceOverview", oldBalanceOverview)
                 let objectToUpdate = {}
                 let queryFilter = {}
                 let keyforDb = "balanceOverview.$."+ Object.keys(newSingleBalanceOverview)[0];
@@ -176,7 +176,7 @@ createOrUpdateBalanceOverview = async (req,res) => {
                 queryFilter["address"] = body.address;
                 queryFilter[keyforFilter] = Object.values(oldBalanceOverview)[0];
 
-                console.log("createOrUpdateBalanceOverview(): queryFilter, objectToUpdate ", queryFilter,objectToUpdate)
+                //console.log("createOrUpdateBalanceOverview(): queryFilter, objectToUpdate ", queryFilter,objectToUpdate)
                 await collection
                     .findOneAndUpdate(queryFilter, { $set: objectToUpdate }, {upsert:true},
                     (err,resp)=>{
@@ -342,7 +342,7 @@ insertOrUpdateTrades = async (req,res) => {
     const closeTrade = () => {
             
         let sellTrade = body;
-        console.log("SellTrade: %s",sellTrade);
+        //console.log("SellTrade: %s",sellTrade);
         //tradeFindendInBuyLocal.forEach( (buyTrade)=>{
         for (let i = 0; i < tradeFindendInBuyLocal.length; i++){
             let buyTrade = tradeFindendInBuyLocal[i];
@@ -474,11 +474,10 @@ getDashboardData = async (req,res) => {
 
     try{
         let address = body.address && body.address.toLowerCase();
-        console.log('getDashBoardData(): address: %s', address);
+        //console.log('getDashBoardData(): address: %s', address);
         const collection = await getCollection('Trades');
         const openedTrades = await collection.find({user:address,status:{$lt:100}}).toArray()
         let openedTradesFormatted = []
-        let closedPlList = {}
 
         let totalOpenTradesValue = 0;
 
@@ -499,7 +498,7 @@ getDashboardData = async (req,res) => {
         })
 
         if(openedTradesFormatted.length>0){
-            console.log("getDashBoardData(): openedTradesFormatted.length > 0");
+            //console.log("getDashBoardData(): openedTradesFormatted.length > 0");
             return res.status(200).json({
                 created:true,
                 data: {   
@@ -526,7 +525,6 @@ getProfitsLoss = async (req,res) => {
     }
 
     const queryObject = url.parse(req.url, true).query;
-    //console.log(queryObject);
 
     if(!queryObject.user) {
 		return res.status(400).json({
@@ -587,7 +585,7 @@ getProfitsLoss = async (req,res) => {
             }
         });
 
-        console.log(finalResult);
+        //console.log(finalResult);
 
         return res.status(200).json({
             success: true,
