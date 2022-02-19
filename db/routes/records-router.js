@@ -11,5 +11,6 @@ router.post('/getTrades',RecordsCtrl.getTrades)
 router.post('/getDashBoardData',RecordsCtrl.getDashboardData)
 router.post('/createOrUpdateBalanceOverview',RecordsCtrl.createOrUpdateBalanceOverview)
 router.get('/getFiats', RecordsCtrl.getFiats)
+router.get('/getProfitsLosses', RecordsCtrl.getProfitsLoss)
 
 module.exports = router

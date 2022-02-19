@@ -1,5 +1,6 @@
 const {getCollection} = require('../dataModels/dataModel')
 require('dotenv').config({ path: `${__dirname}/../../.env`})
+const url = require('url');
 
 const BigNumber = require('bignumber.js')
 
@@ -517,6 +518,48 @@ getDashboardData = async (req,res) => {
 
 }
 
+getProfitsLoss = async (req,res) => {
+    const queryObject = url.parse(req.url, true).query;
+    console.log(queryObject);
+
+    if(!queryObject.user) {
+		return res.status(400).json({
+				success:false,
+				error: 'Missing user',
+			})
+	}
+
+    const user = queryObject.address.toLowerCase();
+
+    const collection = await getCollection('TradeProfits');
+    const pls = await collection.find({user:user}).toArray();
+    if(! (pls.length > 0)){
+        return res.status(200).json({
+            success:true,
+            data: []
+        })
+    }
+
+    let pls_formatted = new Map();
+    pls.forEach((pl_item) => {
+        let k = new Date(pl_item.date).toISOString().split('T')[0].replace('-','/');
+        if(pls_formatted.has(k)){
+            pls_formatted.get(k) += pl_item.profitLoss;
+        }else{
+            pls_formatted.set(k, pl_item.profitLoss);
+        }
+        return obj;
+    })
+
+    if(pls_formatted.size > 0){
+        return res.status(200).json({
+            success: true,
+            data: pls_formatted.toArray()
+        })
+    }
+
+}
+
 module.exports = {
 	createOrUpdateUser,
     createOrUpdateBalanceOverview,
@@ -525,4 +568,5 @@ module.exports = {
     getTrades,
     getDashboardData,
     getFiats,
+    getProfitsLoss
 }
