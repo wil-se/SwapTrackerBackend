@@ -1,6 +1,7 @@
 const {getCollection} = require('../dataModels/dataModel')
 require('dotenv').config({ path: `${__dirname}/../../.env`})
 const url = require('url');
+const moment = require('moment');
 
 const BigNumber = require('bignumber.js')
 
@@ -519,6 +520,7 @@ getDashboardData = async (req,res) => {
 }
 
 getProfitsLoss = async (req,res) => {
+
     const queryObject = url.parse(req.url, true).query;
     console.log(queryObject);
 
@@ -533,6 +535,14 @@ getProfitsLoss = async (req,res) => {
 
     const collection = await getCollection('TradeProfits');
     const pls = await collection.find({user:user}).toArray();
+    pls.sort(function(a,b){
+        return new Date(a.date) - new Date(b.date);
+    });
+
+    let start_date = moment(pls[0].date);
+    let end_date = moment(pls[pls.length -1].date);
+    let n_days = start_date.diff(end_date, 'days')
+
     if(! (pls.length > 0)){
         return res.status(200).json({
             success:true,
@@ -541,6 +551,7 @@ getProfitsLoss = async (req,res) => {
     }
 
     let pls_formatted = new Map();
+    let pls_obj = Object.fromEntries(pls_formatted);
     pls.forEach((pl_item) => {
         let k = new Date(pl_item.date).toISOString().split('T')[0].replace('-','/');
         if(pls_formatted.has(k)){
@@ -550,10 +561,27 @@ getProfitsLoss = async (req,res) => {
         }
     })
 
-    if(pls_formatted.size > 0){
+    const dates = [];
+
+    for (let i = 0; i < n_days; i++) {
+        let date = moment();
+        date.subtract(i, 'day');
+        dates.push(date.format('YYYY-MM-DD'));
+    }
+
+    let finalResult = {};
+    dates.reverse().forEach(date => {
+        if(!myRes.hasOwnProperty(date)) {
+            finalResult[date] = 0;
+        } else {
+            finalResult[date] = myRes[date];
+        }
+    });
+
+    if(finalResult.size > 0){
         return res.status(200).json({
             success: true,
-            data: [...pls_formatted]
+            data: finalResult
         })
     }
 
