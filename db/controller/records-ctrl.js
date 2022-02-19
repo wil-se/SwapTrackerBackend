@@ -585,11 +585,14 @@ getProfitsLoss = async (req,res) => {
             }
         });
 
-        //console.log(finalResult);
 
         return res.status(200).json({
             success: true,
-            data: Object.entries(finalResult)
+            data: Object.entries(finalResult).reduce((acc, val) => {
+                const [key, value] = val;
+                acc[key] = value;
+                return acc;
+            }, {})
         })
     }catch(err) {
         console.log(err);
