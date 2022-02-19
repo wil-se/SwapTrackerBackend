@@ -595,13 +595,13 @@ getProfitsLoss = async (req,res) => {
         });
 
         let asArray = Object.entries(finalResult);
+        console.log(asArray);
         if(asArray.length > 0)
             for(let j = 1; j < asArray.length; j++) {
                 asArray[j][1] += asArray[j-1][1]
             }
 
         let parsed = asArray.map(el => {
-            console.log(el);
             return {
                 [el[0]]: el[1]
             }
