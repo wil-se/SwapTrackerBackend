@@ -550,6 +550,8 @@ getProfitsLoss = async (req,res) => {
             return new Date(a.date) - new Date(b.date);
         });
 
+        console.log(pls);
+
 
         let start_date = moment(pls[0].date);
         let end_date = moment();
