@@ -333,7 +333,7 @@ insertOrUpdateTrades = async (req,res) => {
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
     const calcPL = (buyTrade, sellTrade) => {
-        console.log(Number(sellTrade.amountIn), Number(sellTrade.priceFrom), Number(buyTrade.priceTo));
+        //console.log(Number(sellTrade.amountIn), Number(sellTrade.priceFrom), Number(buyTrade.priceTo));
         return Number(sellTrade.amountIn) * (Number(sellTrade.priceFrom) - Number(buyTrade.priceTo));
     }
 
@@ -344,9 +344,9 @@ insertOrUpdateTrades = async (req,res) => {
         //tradeFindendInBuyLocal.forEach( (buyTrade)=>{
         for (let i = 0; i < tradeFindendInBuyLocal.length; i++){
             let buyTrade = tradeFindendInBuyLocal[i];
-            console.log("BuyTrade: %s",buyTrade);
+            //console.log("BuyTrade: %s",buyTrade);
             pl += calcPL(buyTrade, sellTrade);
-            console.log("PL: %s", pl);
+            //console.log("PL: %s", pl);
 
             if(Number(sellTrade.amountIn) > Number(buyTrade.amountOut) && buyTrade.status !== 100){
                 buyTrade.status = 100;
@@ -367,7 +367,7 @@ insertOrUpdateTrades = async (req,res) => {
     }
         
     const logProfitLoss = async (profitLoss) => {
-        console.log("PL: %s", profitLoss);
+        //console.log("PL: %s", profitLoss);
         let coll = await getCollection('TradeProfits');
         coll.insertOne({
             user: body.user,
