@@ -340,10 +340,11 @@ insertOrUpdateTrades = async (req,res) => {
     const closeTrade = () => {
             
         let sellTrade = body;
-
+        console.log("SellTrade: %s",sellTrade);
         //tradeFindendInBuyLocal.forEach( (buyTrade)=>{
         for (let i = 0; i < tradeFindendInBuyLocal.length; i++){
             let buyTrade = tradeFindendInBuyLocal[i];
+            console.log("BuyTrade: %s",buyTrade);
             pl += calcPL(buyTrade, sellTrade);
             console.log("PL: %s", pl);
 
