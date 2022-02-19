@@ -535,64 +535,71 @@ getProfitsLoss = async (req,res) => {
 			})
 	}
 
-    const user = queryObject.user.toLowerCase();
+    try {
+        const user = queryObject.user.toLowerCase();
 
-    const collection = await getCollection('TradeProfits');
-    const pls = await collection.find({user:user}).toArray();
-    pls.sort(function(a,b){
-        return new Date(a.date) - new Date(b.date);
-    });
+        const collection = await getCollection('TradeProfits');
+        const pls = await collection.find({user:user}).toArray();
+        pls.sort(function(a,b){
+            return new Date(a.date) - new Date(b.date);
+        });
 
-    let start_date = moment(pls[0].date);
-    let end_date = moment();
-    let n_days = start_date.diff(end_date, 'days');
+        let start_date = moment(pls[0].date);
+        let end_date = moment();
+        let n_days = start_date.diff(end_date, 'days');
 
-    if(n_days === 0)
-        n_days = 1;
-    
-    if(! (pls.length > 0)){
-        return res.status(200).json({
-            success:true,
-            data: []
+        if(n_days === 0)
+            n_days = 1;
+        
+        if(! (pls.length > 0)){
+            return res.status(200).json({
+                success:true,
+                data: []
+            })
+        }
+
+        let pls_formatted = new Map();
+        pls.forEach((pl_item) => {
+            let k = replaceAll(new Date(pl_item.date).toISOString().split('T')[0], '-', '/');
+            if(pls_formatted.has(k)){
+                pls_formatted.set(k, pls_formatted.get(k) + pl_item.profitLoss );
+            }else{
+                pls_formatted.set(k, pl_item.profitLoss);
+            }
         })
-    }
 
-    let pls_formatted = new Map();
-    pls.forEach((pl_item) => {
-        let k = replaceAll(new Date(pl_item.date).toISOString().split('T')[0], '-', '/');
-        if(pls_formatted.has(k)){
-            pls_formatted.set(k, pls_formatted.get(k) + pl_item.profitLoss );
-        }else{
-            pls_formatted.set(k, pl_item.profitLoss);
+        let pls_obj = Object.fromEntries(pls_formatted);
+        let dates = [];
+
+        for (let i = 0; i < n_days; i++) {
+            let date = moment();
+            date.subtract(i, 'day');
+            let d = date.format('YYYY/MM/DD');
+            dates.push(d);
         }
-    })
 
-    let pls_obj = Object.fromEntries(pls_formatted);
-    let dates = [];
+        let finalResult = {};
+        dates.reverse().forEach(date => {
+            if(!pls_obj.hasOwnProperty(date)) {
+                finalResult[date] = 0;
+            } else {
+                finalResult[date] = pls_obj[date];
+            }
+        });
 
-    for (let i = 0; i < n_days; i++) {
-        let date = moment();
-        date.subtract(i, 'day');
-        let d = date.format('YYYY/MM/DD');
-        dates.push(d);
+        console.log(finalResult);
+
+        return res.status(200).json({
+            success: true,
+            data: Object.entries(finalResult)
+        })
+    }catch(err) {
+        console.log(err);
+        return res.status(400).json({
+            success: false,
+            message: 'An error occurred, please try again later.'
+        });
     }
-
-    let finalResult = {};
-    dates.reverse().forEach(date => {
-        if(!pls_obj.hasOwnProperty(date)) {
-            finalResult[date] = 0;
-        } else {
-            finalResult[date] = pls_obj[date];
-        }
-    });
-
-    console.log(finalResult);
-
-    return res.status(200).json({
-        success: true,
-        data: Object.entries(finalResult)
-    })
-
 }
 
 module.exports = {
