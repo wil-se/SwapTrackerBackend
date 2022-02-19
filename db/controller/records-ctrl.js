@@ -522,7 +522,7 @@ getDashboardData = async (req,res) => {
 getProfitsLoss = async (req,res) => {
 
     const queryObject = url.parse(req.url, true).query;
-    console.log(queryObject);
+    //console.log(queryObject);
 
     if(!queryObject.user) {
 		return res.status(400).json({
@@ -552,6 +552,7 @@ getProfitsLoss = async (req,res) => {
 
     let pls_formatted = new Map();
     let pls_obj = Object.fromEntries(pls_formatted);
+    console.log(pls_obj);
     pls.forEach((pl_item) => {
         let k = new Date(pl_item.date).toISOString().split('T')[0].replace('-','/');
         if(pls_formatted.has(k)){
@@ -561,7 +562,7 @@ getProfitsLoss = async (req,res) => {
         }
     })
 
-    const dates = [];
+    let dates = [];
 
     for (let i = 0; i < n_days; i++) {
         let date = moment();
@@ -571,10 +572,10 @@ getProfitsLoss = async (req,res) => {
 
     let finalResult = {};
     dates.reverse().forEach(date => {
-        if(!myRes.hasOwnProperty(date)) {
+        if(!pls_obj.hasOwnProperty(date)) {
             finalResult[date] = 0;
         } else {
-            finalResult[date] = myRes[date];
+            finalResult[date] = pls_obj[date];
         }
     });
 
