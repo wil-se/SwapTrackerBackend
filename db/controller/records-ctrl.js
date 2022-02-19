@@ -544,7 +544,7 @@ getProfitsLoss = async (req,res) => {
     pls.forEach((pl_item) => {
         let k = new Date(pl_item.date).toISOString().split('T')[0].replace('-','/');
         if(pls_formatted.has(k)){
-            pls_formatted.get(k) += pl_item.profitLoss;
+            pls_formatted.set(k, pls_formatted.get(k) += pl_item.profitLoss );
         }else{
             pls_formatted.set(k, pl_item.profitLoss);
         }
