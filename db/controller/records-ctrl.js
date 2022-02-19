@@ -328,28 +328,30 @@ insertOrUpdateTrades = async (req,res) => {
 	const collection = await getCollection('Trades');
     const tradeFindedInBuy = await collection.find({user:body.user,tokenTo:body.tokenFrom,status:{$lt:100}}).toArray()
     let now = new Date();
+    let pl = 0;
     
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
-    const closeTrade = (pl = 0) => {
+    const closeTrade = () => {
             
         let sellTrade = body;
 
         tradeFindendInBuyLocal.forEach( (buyTrade)=>{
              
+            pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
+            console.log("PL: %s", pl);
+
             if(Number(sellTrade.amountIn) > Number(buyTrade.amountOut) && buyTrade.status !== 100){
                 buyTrade.status = 100;
                 buyTrade.closedDate = now;
-                pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
-                console.log("PL: %s", pl);
-                return closeTrade(pl);
+                closeTrade();
             } else {
-                buyTrade.status = buyTrade.status += ((sellTrade.amountIn /buyTrade.amountOut ) * 100);
+                buyTrade.status = buyTrade.status += ((sellTrade.amountIn / buyTrade.amountOut ) * 100);
                 if(buyTrade.status > 98.8){
                     buyTrade.status = 100;
                     buyTrade.closedDate = now;
                 }
-                return pl;
+                return;
             }
                 
         })
@@ -364,7 +366,7 @@ insertOrUpdateTrades = async (req,res) => {
         });
     }
 
-    let pl = closeTrade()
+    closeTrade()
     logProfitLoss(pl)
         
     tradeFindendInBuyLocal.forEach( async(tradeBuySelled,i) => {
