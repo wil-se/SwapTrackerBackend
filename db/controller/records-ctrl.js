@@ -551,8 +551,6 @@ getProfitsLoss = async (req,res) => {
     }
 
     let pls_formatted = new Map();
-    let pls_obj = Object.fromEntries(pls_formatted);
-    console.log(pls_obj);
     pls.forEach((pl_item) => {
         let k = new Date(pl_item.date).toISOString().split('T')[0].replace('-','/');
         if(pls_formatted.has(k)){
@@ -561,6 +559,8 @@ getProfitsLoss = async (req,res) => {
             pls_formatted.set(k, pl_item.profitLoss);
         }
     })
+    let pls_obj = Object.fromEntries(pls_formatted);
+    console.log(pls_obj);
 
     let dates = [];
 
