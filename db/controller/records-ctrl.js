@@ -342,7 +342,7 @@ insertOrUpdateTrades = async (req,res) => {
                 buyTrade.status = 100;
                 buyTrade.closedDate = now;
                 pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
-                trades.pop();
+                console.log("PL: %s", pl);
                 closeTrade(pl);
             } else {
                 buyTrade.status = buyTrade.status += ((sellTrade.amountIn /buyTrade.amountOut ) * 100);
@@ -412,7 +412,7 @@ insertOrUpdateTrades = async (req,res) => {
             })
 
         }
-    })		
+    })
 
 }
 
