@@ -336,8 +336,9 @@ insertOrUpdateTrades = async (req,res) => {
             
         let sellTrade = body;
 
-        tradeFindendInBuyLocal.forEach( (buyTrade)=>{
-             
+        //tradeFindendInBuyLocal.forEach( (buyTrade)=>{
+        for (let i = 0; i < tradeFindendInBuyLocal.length; i++){
+            let buyTrade = tradeFindendInBuyLocal[i];
             pl += sellTrade.amountIn * (sellTrade.priceFrom - buyTrade.priceTo);
             console.log("PL: %s", pl);
 
@@ -353,8 +354,10 @@ insertOrUpdateTrades = async (req,res) => {
                 }
                 return;
             }
+        }
+            
                 
-        })
+        //})
     }
         
     const logProfitLoss = async (profitLoss) => {
