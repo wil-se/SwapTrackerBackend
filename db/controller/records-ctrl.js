@@ -575,10 +575,9 @@ getProfitsLoss = async (req,res) => {
         })
 
         let pls_obj = Object.fromEntries(pls_formatted);
-        console.log(pls_obj);
         let dates = [];
 
-        for (let i = 0; i < n_days; i++) {
+        for (let i = 0; i <= n_days; i++) {
             let date = moment();
             date.subtract(i, 'day');
             let d = date.format('YYYY/MM/DD');
