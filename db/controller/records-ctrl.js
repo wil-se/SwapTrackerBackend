@@ -560,7 +560,6 @@ getProfitsLoss = async (req,res) => {
         }
     })
     let pls_obj = Object.fromEntries(pls_formatted);
-    console.log(pls_obj);
 
     let dates = [];
 
@@ -579,12 +578,12 @@ getProfitsLoss = async (req,res) => {
         }
     });
 
-    if(finalResult.size > 0){
-        return res.status(200).json({
-            success: true,
-            data: finalResult
-        })
-    }
+    console.log(finalResult);
+
+    return res.status(200).json({
+        success: true,
+        data: finalResult
+    })
 
 }
 
