@@ -593,7 +593,7 @@ getProfitsLoss = async (req,res) => {
                 finalResult[date] = pls_obj[date];
             }
         });
-
+        console.log(finalResult);
         let asArray = Object.entries(finalResult);
         console.log(asArray);
         if(asArray.length > 0)
