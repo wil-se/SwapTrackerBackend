@@ -49,4 +49,6 @@ const run = async () => {
   }
 }
 
-run()
+run().then(() => {
+  console.log("FiatPrices successfully updated.");
+})
