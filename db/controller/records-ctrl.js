@@ -336,7 +336,8 @@ insertOrUpdateTrades = async (req,res) => {
     
     const calcPL = (buyTrade, sellTrade) => {
         //console.log(Number(sellTrade.amountIn), Number(sellTrade.priceFrom), Number(buyTrade.priceTo));
-        return Number(sellTrade.amountIn) * (Number(sellTrade.priceFrom) - Number(buyTrade.priceTo));
+        let amount = sellTrade.amountIn <= buyTrade.amountOut ? sellTrade.amountIn : buyTrade.amountOut;
+        return amount * (Number(sellTrade.priceFrom) - Number(buyTrade.priceTo));
     }
 
     const closeTrade = () => {
@@ -553,8 +554,6 @@ getProfitsLoss = async (req,res) => {
         let start_date = moment(pls[0].date).subtract(1, 'days');
         let end_date = moment();
         let n_days = Math.abs(end_date.diff(start_date, 'days'));
-        console.log(n_days);
-
         n_days++;
                 
         if(! (pls.length > 0)){
