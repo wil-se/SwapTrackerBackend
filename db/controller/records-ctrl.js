@@ -552,7 +552,7 @@ getProfitsLoss = async (req,res) => {
 
         let start_date = moment(pls[0].date).subtract(1, 'days');
         let end_date = moment();
-        let n_days = Math.abs(start_date.diff(end_date, 'days'));
+        let n_days = Math.abs(end_date.diff(start_date, 'days'));
         console.log(n_days);
 
         if(n_days === 0)
