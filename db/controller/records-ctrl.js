@@ -550,6 +550,8 @@ getProfitsLoss = async (req,res) => {
             return new Date(a.date) - new Date(b.date);
         });
 
+        console.log(pls);
+
         let start_date = moment(pls[0].date).subtract(1, 'days');
         let end_date = moment();
         let n_days = Math.abs(start_date.diff(end_date, 'days'));
@@ -583,8 +585,6 @@ getProfitsLoss = async (req,res) => {
             let d = date.format('YYYY/MM/DD');
             dates.push(d);
         }
-
-        console.log(dates);
 
         let finalResult = {};
         dates.reverse().forEach(date => {
