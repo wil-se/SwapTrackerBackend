@@ -544,7 +544,7 @@ getProfitsLoss = async (req,res) => {
                 success: true,
                 data: [
                     {
-                        [replaceAll(new Date(pl_item.date).toISOString().split('T')[0], '-', '/')]: 0
+                        [replaceAll(new Date().toISOString().split('T')[0], '-', '/')]: 0
                     }
                 ]
             });
