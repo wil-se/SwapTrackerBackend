@@ -584,6 +584,8 @@ getProfitsLoss = async (req,res) => {
             dates.push(d);
         }
 
+        console.log(dates);
+
         let finalResult = {};
         dates.reverse().forEach(date => {
             if(!pls_obj.hasOwnProperty(date)) {
