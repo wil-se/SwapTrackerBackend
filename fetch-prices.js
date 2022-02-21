@@ -33,26 +33,20 @@ const run = async () => {
     var hostname = 'data.fixer.io';
     var path = `/api/latest?access_key=${process.env.API_KEY}&base=USD&symbols=${symbols.join(",")}&format=1`;
 
-    axios.get(`https://${hostname}${path}`)
-    .then(function (data) {
-      for(var rate in data['data']['rates']){
-        const query = {currency: rate};
-        const update = { $set: { currency: rate, timestamp: data['data']['timestamp'], date: data['data']['date'], rate: data['data']['rates'][rate] }};
-        const options = {upsert: true};
-        await prices.updateOne(query, update, options);
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      process.exit(1);
-    })
-    .then(function(){
-      process.exit(0);
-    })
+    let data = await axios.get(`https://${hostname}${path}`);
+
+    for(var rate in data['data']['rates']){
+      const query = {currency: rate};
+      const update = { $set: { currency: rate, timestamp: data['data']['timestamp'], date: data['data']['date'], rate: data['data']['rates'][rate] }};
+      const options = {upsert: true};
+      await prices.updateOne(query, update, options);
+    }
+    return 0;
+
   } catch(e){
     console.log(e);
+    return 1;
   }
 }
-
 
 run()
