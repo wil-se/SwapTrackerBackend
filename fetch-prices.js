@@ -1,14 +1,12 @@
 require('dotenv').config({ path: `${__dirname}/.env`})
 
-const { MongoClient } = require('mongodb');
+const {getCollection} = require('./db/dataModels/dataModel')
 const axios = require('axios').default;
 
 const run = async () => {
-  const client = new MongoClient(process.env.DB_URL);
-  await client.connect();
-  var dbo = await client.db("Cluster0");
-  const prices = await dbo.collection("FiatPrices");
-
+  try{
+    const prices = await getCollection("FiatPrices");
+  
   var symbols = [
       "USD",
       "EUR",
@@ -50,6 +48,9 @@ const run = async () => {
   .then(function(){
     process.exit(0);
   })
+} catch(e){
+  console.log(e);
+}
 }
 
 
