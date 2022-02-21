@@ -335,7 +335,6 @@ insertOrUpdateTrades = async (req,res) => {
     let tradeFindendInBuyLocal = tradeFindedInBuy
     
     const calcPL = (buyTrade, sellTrade) => {
-        //console.log(Number(sellTrade.amountIn), Number(sellTrade.priceFrom), Number(buyTrade.priceTo));
         let amount = sellTrade.amountIn <= buyTrade.amountOut ? sellTrade.amountIn : buyTrade.amountOut;
         return amount * (Number(sellTrade.priceFrom) - Number(buyTrade.priceTo));
     }
@@ -543,7 +542,11 @@ getProfitsLoss = async (req,res) => {
         if(!pls || pls.length == 0){
             return res.status(200).json({
                 success: true,
-                data: {}
+                data: [
+                    {
+                        [replaceAll(new Date(pl_item.date).toISOString().split('T')[0], '-', '/')]: 0
+                    }
+                ]
             });
         }
 
