@@ -315,6 +315,7 @@ updateUserTokenList = async (req,res) => {
 insertOrUpdateTrades = async (req,res) => {
 
     const body = req.body;
+    const store_trade = req.store || true;
     body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
     body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
     body.user = body.user && body.user.toLowerCase()
@@ -380,7 +381,8 @@ insertOrUpdateTrades = async (req,res) => {
 
     closeTrade()
     logProfitLoss(pl)
-        
+    
+    
     tradeFindendInBuyLocal.forEach( async(tradeBuySelled,i) => {
         if(tradeBuySelled.closedDate){
             await collection.findOneAndUpdate({user:tradeBuySelled.user, tokenTo:tradeBuySelled.tokenTo,status:{$lt:100}},
@@ -409,23 +411,32 @@ insertOrUpdateTrades = async (req,res) => {
         }
     })
 
-    await collection.insertMany(listRecord, {safe:true}, (err,resp) => {
-        if(!err){              
-            return res.status(200).json({
-                created:true,
-                id: req._id,
-                message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
-                data: body
-            })
-        }
-        else{
-            return res.status(400).json({
-                err,
-                message: `${body.txId} non creato!`,
-            })
+    if(store_trade){
+        await collection.insertMany(listRecord, {safe:true}, (err,resp) => {
+            if(!err){              
+                return res.status(200).json({
+                    created:true,
+                    id: req._id,
+                    message: `${body.txId} , ${JSON.stringify(resp)} creato!`,
+                    data: body
+                })
+            }
+            else{
+                return res.status(400).json({
+                    err,
+                    message: `${body.txId} non creato!`,
+                })
 
-        }
-    })
+            }
+        })
+    }else{
+        return res.status(200).json({
+            created:true,
+            id: 0,
+            message: `success`,
+            data: body
+        });
+    }
 
 }
 
