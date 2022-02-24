@@ -322,6 +322,8 @@ insertOrUpdateTrades = async (req,res) => {
 	const listRecord = [];
 	listRecord.push(body);
 
+    console.log("Store trade: ", store_trade)
+
     if(!body) {
 		return res.status(400).json({
 				success:false,
@@ -411,7 +413,7 @@ insertOrUpdateTrades = async (req,res) => {
         }
     })
 
-    if(store_trade){
+    if(store_trade === true){
         await collection.insertMany(listRecord, {safe:true}, (err,resp) => {
             if(!err){              
                 return res.status(200).json({
