@@ -475,6 +475,7 @@ getTrades = async (req,res) => {
 
 getDashboardData = async (req,res) => {
     const body = req.body;
+    console.log(body);
     
     if(!body){
         return res.status(400).json({
@@ -491,6 +492,17 @@ getDashboardData = async (req,res) => {
         let openedTradesFormatted = []
 
         let totalOpenTradesValue = 0;
+
+        if(! openedTrades.length > 0)
+        {
+            return res.status(200).json({
+                created:true,
+                data: {   
+                    openedTrades: [],
+                    totalOpenTradesValue: 0
+                }
+            })
+        }
 
         openedTrades.map((openedTrade)=> {
             let amountOutMultiplyForPrice = openedTrade.amountOut * openedTrade.priceTo;
@@ -509,7 +521,6 @@ getDashboardData = async (req,res) => {
         })
 
         if(openedTradesFormatted.length>0){
-            //console.log("getDashBoardData(): openedTradesFormatted.length > 0");
             return res.status(200).json({
                 created:true,
                 data: {   
