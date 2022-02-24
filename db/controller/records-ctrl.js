@@ -315,7 +315,7 @@ updateUserTokenList = async (req,res) => {
 insertOrUpdateTrades = async (req,res) => {
 
     const body = req.body;
-    const store_trade = req.store;
+    const store_trade = body.store;
     body.tokenFrom = body.tokenFrom && body.tokenFrom.toLowerCase()
     body.tokenTo = body.tokenTo && body.tokenTo.toLowerCase()
     body.user = body.user && body.user.toLowerCase()
