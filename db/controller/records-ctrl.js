@@ -456,6 +456,13 @@ getTrades = async (req,res) => {
 
     const trades = await collection.find({user:body.address}).toArray();
 
+    if(!trades || trades.length == 0){
+        return res.status(200).json({
+            length: 0,
+            data: []
+        })
+    }
+
     trades.map((trade)=>{
         trade.amountIn = new BigNumber(trade.amountIn).toNumber()
         trade.openAt = (trade.amountOut * trade.priceTo)
@@ -468,7 +475,7 @@ getTrades = async (req,res) => {
 
     if(tradesFormatted.length >0){
         return res.status(200).json({
-            created:true,
+            length: tradesFormatted.length,
             data: tradesFormatted
         })
     } 
